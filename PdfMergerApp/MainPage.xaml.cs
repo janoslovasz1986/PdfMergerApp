@@ -61,7 +61,7 @@ namespace PdfMergerApp
 
             try
             {
-                await DisplayAlert("OK", "Pdf Összefüzése...", "OK");
+                await DisplayAlert("", "Pdf Összefüzése...", "OK");
                 using (PdfWriter writer = new PdfWriter(outputPdfPath))
                 using (PdfDocument destPdf = new PdfDocument(writer))
                 {
@@ -80,8 +80,8 @@ namespace PdfMergerApp
                     }
                 }
 
-                await DisplayAlert("OK", $"PDF létrejött. Összesen {GlobalVariables.sumOfPages} oldal.", "OK");
-                await DisplayAlert("OK", "Másolás kezdödik....", "OK");
+                await DisplayAlert("", $"PDF létrejött. Összesen {GlobalVariables.sumOfPages} oldal.", "OK");
+                await DisplayAlert("", "Másolás kezdödik....", "OK");
 
             }
             catch (Exception ex)
@@ -95,7 +95,7 @@ namespace PdfMergerApp
             {
                 //outputPdfPath = 
                 await MoveFileFromAppDirectoryToDownloadAsync(FileSystem.AppDataDirectory, "3.pdf");
-                await DisplayAlert("OK", "Másolás kész", "OK");
+                await DisplayAlert("", "Másolás kész", "OK");
             }
             catch (Exception ex)
             {
@@ -106,7 +106,8 @@ namespace PdfMergerApp
             try
             {
                 await DeleteTempFiles();
-                await DisplayAlert("OK", "Temp fájlok törölve", "OK");
+                await DisplayAlert("", "Temp fájlok törölve", "OK");
+                await OpenCreatedPdf();
                 await ClearGlobalVariables();
             }
             catch (Exception ex)
@@ -170,9 +171,10 @@ namespace PdfMergerApp
             //string sourceFilePath = Path.Combine(FileSystem.AppDataDirectory, "test.txt");
             string sourceFilePath = Path.Combine(sourcePath, fileName);
             string timeStamp = "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            GlobalVariables.outputPdf = Path.Combine(destinationPath, "output" + timeStamp + ".pdf");
             using (FileStream sourceStream = new FileStream(sourceFilePath, FileMode.OpenOrCreate))
             //using (FileStream destinationStream = new FileStream(Path.Combine(destinationPath, "test_copied.txt"), FileMode.Create))
-            //using (FileStream destinationStream = new FileStream(Path.Combine(destinationPath, fileName), FileMode.Create))
+            //using (FileStream destinationStream = new FileStream(Path.Combine(destinationPath, fileName), FileMode.Create)
             using (FileStream destinationStream = new FileStream(Path.Combine(destinationPath, "output" + timeStamp + ".pdf"), FileMode.Create))
             {
                 sourceStream.CopyTo(destinationStream);
@@ -216,6 +218,19 @@ namespace PdfMergerApp
             using var sourceStream = await result.OpenReadAsync();
             using var destStream = File.Create(destPath);
             await sourceStream.CopyToAsync(destStream);
+        }
+
+        public async Task OpenCreatedPdf()
+        {
+
+            //var filePath = Path.Combine(FileSystem.AppDataDirectory, "teszt.pdf");
+            var filePath = GlobalVariables.outputPdf;
+
+            await Launcher.OpenAsync(new OpenFileRequest
+            {
+                File = new ReadOnlyFile(filePath)
+            });
+
         }
 
         public async Task ClearGlobalVariables()
