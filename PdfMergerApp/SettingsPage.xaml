@@ -12,7 +12,7 @@
             <Entry x:Name="FileNameEntry"
                    Placeholder="pl. merged_doc"
                    WidthRequest="220"
-                   Text="bíe"/>
+                   Text="fájl neve"/>
             <Label Text=".pdf"
                    VerticalOptions="Center"
                    FontSize="16"/>
