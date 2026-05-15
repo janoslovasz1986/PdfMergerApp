@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Maui.ApplicationModel;
+using Org.BouncyCastle.Asn1.Utilities;
 
 namespace PdfMergerApp
 {
@@ -116,6 +118,17 @@ namespace PdfMergerApp
                 await DisplayAlert("Hiba", ex.Message, "OK");
             }
 
+            try 
+            { 
+            
+                await OpenCreatedPdf();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error opening created PDF");
+                await DisplayAlert("Hiba", ex.Message, "OK");
+            }
+
         }
         static int get_pageCcount(string file)
         {
@@ -167,11 +180,13 @@ namespace PdfMergerApp
 
 # if ANDROID
             var destinationPath = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).AbsolutePath;
+            GlobalVariables.androidDestinationPath = destinationPath;
             //Source Path
             //string sourceFilePath = Path.Combine(FileSystem.AppDataDirectory, "test.txt");
             string sourceFilePath = Path.Combine(sourcePath, fileName);
             string timeStamp = "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
             string finalName = GlobalVariables.outputFileName + timeStamp + ".pdf";
+            GlobalVariables.androidDestinationFinalName = finalName;
             using (FileStream sourceStream = new FileStream(sourceFilePath, FileMode.OpenOrCreate))
 
             //using (FileStream destinationStream = new FileStream(Path.Combine(destinationPath, "output" + timeStamp + ".pdf"), FileMode.Create))
@@ -188,8 +203,8 @@ namespace PdfMergerApp
 # if ANDROID
             string sourceFilePath1 = Path.Combine(FileSystem.AppDataDirectory, "1.pdf");
             string sourceFilePath2 = Path.Combine(FileSystem.AppDataDirectory, "2.pdf");
-            string sourceFilePath2 = Path.Combine(FileSystem.AppDataDirectory, "3.pdf");
-            string sourceFilePath3 = Path.Combine(FileSystem.AppDataDirectory, GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
+            string sourceFilePath3 = Path.Combine(FileSystem.AppDataDirectory, "3.pdf");
+            string sourceFilePath4 = Path.Combine(FileSystem.AppDataDirectory, GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
             //string sourceFilePath = Path.Combine(sourcePath, fileName);
 
             if (File.Exists(sourceFilePath1))
@@ -221,6 +236,19 @@ namespace PdfMergerApp
             await sourceStream.CopyToAsync(destStream);
         }
 
+
+        public async Task OpenCreatedPdf()
+        {
+            var filePath = Path.Combine(GlobalVariables.androidDestinationPath, GlobalVariables.androidDestinationFinalName);
+
+            await Launcher.OpenAsync(new OpenFileRequest
+            {
+                File = new ReadOnlyFile(filePath)
+            });
+
+
+        }
+
         public async Task ClearGlobalVariables()
         {
             await Task.Run(() =>
@@ -240,5 +268,7 @@ namespace PdfMergerApp
         public static int sumOfPages = 0;
         public static string outputFileName = "output";
         public static string outputFileNameCreatedOnDeviceInnerStorage = "";
+        public static string androidDestinationPath = "";
+        public static string androidDestinationFinalName = "";
     }
 }
