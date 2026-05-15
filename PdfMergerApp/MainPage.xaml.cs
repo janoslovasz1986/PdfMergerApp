@@ -53,7 +53,8 @@ namespace PdfMergerApp
             //await ClearGlobalVariables();
 
             string outputPdfPath = "";
-            outputPdfPath = Path.Combine(FileSystem.AppDataDirectory, "3.pdf");
+            //outputPdfPath = Path.Combine(FileSystem.AppDataDirectory, "3.pdf");
+            outputPdfPath = Path.Combine(FileSystem.AppDataDirectory, "output_temp.pdf");
 
             string inputPdfPath1 = "";
             string inputPdfPath2 = "";
@@ -61,7 +62,7 @@ namespace PdfMergerApp
 
             try
             {
-                await DisplayAlert("", "Pdf Összefüzése...", "OK");
+                await DisplayAlert("OK", "Pdf Összefüzése...", "OK");
                 using (PdfWriter writer = new PdfWriter(outputPdfPath))
                 using (PdfDocument destPdf = new PdfDocument(writer))
                 {
@@ -80,8 +81,8 @@ namespace PdfMergerApp
                     }
                 }
 
-                await DisplayAlert("", $"PDF létrejött. Összesen {GlobalVariables.sumOfPages} oldal.", "OK");
-                await DisplayAlert("", "Másolás kezdödik....", "OK");
+                await DisplayAlert("OK", $"PDF létrejött. Összesen {GlobalVariables.sumOfPages} oldal.", "OK");
+                await DisplayAlert("OK", "Másolás kezdödik....", "OK");
 
             }
             catch (Exception ex)
@@ -95,7 +96,7 @@ namespace PdfMergerApp
             {
                 //outputPdfPath = 
                 await MoveFileFromAppDirectoryToDownloadAsync(FileSystem.AppDataDirectory, "3.pdf");
-                await DisplayAlert("", "Másolás kész", "OK");
+                await DisplayAlert("OK", "Másolás kész", "OK");
             }
             catch (Exception ex)
             {
@@ -106,8 +107,7 @@ namespace PdfMergerApp
             try
             {
                 await DeleteTempFiles();
-                await DisplayAlert("", "Temp fájlok törölve", "OK");
-                await OpenCreatedPdf();
+                await DisplayAlert("OK", "Temp fájlok törölve", "OK");
                 await ClearGlobalVariables();
             }
             catch (Exception ex)
@@ -171,11 +171,11 @@ namespace PdfMergerApp
             //string sourceFilePath = Path.Combine(FileSystem.AppDataDirectory, "test.txt");
             string sourceFilePath = Path.Combine(sourcePath, fileName);
             string timeStamp = "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
-            GlobalVariables.outputPdf = Path.Combine(destinationPath, "output" + timeStamp + ".pdf");
+            string finalName = GlobalVariables.outputFileName + timeStamp + ".pdf";
             using (FileStream sourceStream = new FileStream(sourceFilePath, FileMode.OpenOrCreate))
-            //using (FileStream destinationStream = new FileStream(Path.Combine(destinationPath, "test_copied.txt"), FileMode.Create))
-            //using (FileStream destinationStream = new FileStream(Path.Combine(destinationPath, fileName), FileMode.Create)
-            using (FileStream destinationStream = new FileStream(Path.Combine(destinationPath, "output" + timeStamp + ".pdf"), FileMode.Create))
+
+            //using (FileStream destinationStream = new FileStream(Path.Combine(destinationPath, "output" + timeStamp + ".pdf"), FileMode.Create))
+            using (FileStream destinationStream = new FileStream(Path.Combine(destinationPath, finalName), FileMode.Create))
             {
                 sourceStream.CopyTo(destinationStream);
             }
@@ -220,19 +220,6 @@ namespace PdfMergerApp
             await sourceStream.CopyToAsync(destStream);
         }
 
-        public async Task OpenCreatedPdf()
-        {
-
-            //var filePath = Path.Combine(FileSystem.AppDataDirectory, "teszt.pdf");
-            var filePath = GlobalVariables.outputPdf;
-
-            await Launcher.OpenAsync(new OpenFileRequest
-            {
-                File = new ReadOnlyFile(filePath)
-            });
-
-        }
-
         public async Task ClearGlobalVariables()
         {
             await Task.Run(() =>
@@ -250,5 +237,6 @@ namespace PdfMergerApp
         public static ObservableCollection<string> inputPdf = new ObservableCollection<string>();
         public static String outputPdf = "";
         public static int sumOfPages = 0;
+        public static string outputFileName = "output";
     }
 }
