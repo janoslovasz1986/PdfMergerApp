@@ -54,7 +54,8 @@ namespace PdfMergerApp
 
             string outputPdfPath = "";
             //outputPdfPath = Path.Combine(FileSystem.AppDataDirectory, "3.pdf");
-            outputPdfPath = Path.Combine(FileSystem.AppDataDirectory, "output_temp.pdf");
+            GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage = "output_temp.pdf";
+            outputPdfPath = Path.Combine(FileSystem.AppDataDirectory, GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
 
             string inputPdfPath1 = "";
             string inputPdfPath2 = "";
@@ -94,8 +95,7 @@ namespace PdfMergerApp
             //copy the file to downloads
             try
             {
-                //outputPdfPath = 
-                await MoveFileFromAppDirectoryToDownloadAsync(FileSystem.AppDataDirectory, "3.pdf");
+                await MoveFileFromAppDirectoryToDownloadAsync(FileSystem.AppDataDirectory, GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
                 await DisplayAlert("OK", "Másolás kész", "OK");
             }
             catch (Exception ex)
@@ -188,7 +188,8 @@ namespace PdfMergerApp
 # if ANDROID
             string sourceFilePath1 = Path.Combine(FileSystem.AppDataDirectory, "1.pdf");
             string sourceFilePath2 = Path.Combine(FileSystem.AppDataDirectory, "2.pdf");
-            string sourceFilePath3 = Path.Combine(FileSystem.AppDataDirectory, "3.pdf");
+            string sourceFilePath2 = Path.Combine(FileSystem.AppDataDirectory, "3.pdf");
+            string sourceFilePath3 = Path.Combine(FileSystem.AppDataDirectory, GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
             //string sourceFilePath = Path.Combine(sourcePath, fileName);
 
             if (File.Exists(sourceFilePath1))
@@ -238,5 +239,6 @@ namespace PdfMergerApp
         public static String outputPdf = "";
         public static int sumOfPages = 0;
         public static string outputFileName = "output";
+        public static string outputFileNameCreatedOnDeviceInnerStorage = "";
     }
 }
