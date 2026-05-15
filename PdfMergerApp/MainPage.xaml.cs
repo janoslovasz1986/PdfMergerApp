@@ -15,6 +15,7 @@ namespace PdfMergerApp
     public partial class MainPage : ContentPage
     {
         int count = 0;
+        //bool IsBusy = false;
         private readonly ILogger<MainPage> _logger;
 
         public MainPage(ILogger<MainPage> logger)
@@ -52,7 +53,14 @@ namespace PdfMergerApp
 
         private async void createPdf(object sender, EventArgs e)
         {
-            //await ClearGlobalVariables();
+            if (GlobalVariables.inputPdf.Count == 0)
+            {
+                await DisplayAlert("Hiba", "Nincs PDF kiválasztva!", "OK");
+                return;
+            }
+
+            //IsBusy = true; // jelző BE
+
 
             string outputPdfPath = "";
             //outputPdfPath = Path.Combine(FileSystem.AppDataDirectory, "3.pdf");
@@ -65,24 +73,28 @@ namespace PdfMergerApp
 
             try
             {
-                await DisplayAlert("OK", "Pdf Összefüzése...", "OK");
-                using (PdfWriter writer = new PdfWriter(outputPdfPath))
-                using (PdfDocument destPdf = new PdfDocument(writer))
+                await Task.Run(() =>
                 {
-                    PdfMerger merger = new PdfMerger(destPdf);
-
-                    for (int i = 0; i < GlobalVariables.inputPdf.Count; i++)
+                    IsBusy = true; // jelző BE
+                    //await DisplayAlert("", "Pdf Összefüzése...", "OK");
+                    using (PdfWriter writer = new PdfWriter(outputPdfPath))
+                    using (PdfDocument destPdf = new PdfDocument(writer))
                     {
-                        string inputPdfPath = Path.Combine(FileSystem.AppDataDirectory, GlobalVariables.inputPdf[i]);
-                        using (PdfReader reader = new PdfReader(inputPdfPath))
-                        using (PdfDocument pdf = new PdfDocument(reader))
+                        PdfMerger merger = new PdfMerger(destPdf);
+
+                        for (int i = 0; i < GlobalVariables.inputPdf.Count; i++)
                         {
-                            reader.SetUnethicalReading(true);
-                            merger.Merge(pdf, 1, pdf.GetNumberOfPages());
-                            GlobalVariables.sumOfPages++;
+                            string inputPdfPath = Path.Combine(FileSystem.AppDataDirectory, GlobalVariables.inputPdf[i]);
+                            using (PdfReader reader = new PdfReader(inputPdfPath))
+                            using (PdfDocument pdf = new PdfDocument(reader))
+                            {
+                                reader.SetUnethicalReading(true);
+                                merger.Merge(pdf, 1, pdf.GetNumberOfPages());
+                                GlobalVariables.sumOfPages++;
+                            }
                         }
                     }
-                }
+                    });
 
                 await DisplayAlert("OK", $"PDF létrejött. Összesen {GlobalVariables.sumOfPages} oldal.", "OK");
                 await DisplayAlert("OK", "Másolás kezdödik....", "OK");
@@ -92,6 +104,13 @@ namespace PdfMergerApp
             {
                 _logger.LogError(ex, "Error merging PDFs");
                 await DisplayAlert("Hiba", ex.Message, "OK");
+            }
+
+            finally
+            {
+                IsBusy = false; // jelző KI – hiba esetén is!
+                //await DeleteTempFiles();
+                //await ClearGlobalVariables();
             }
 
             //copy the file to downloads

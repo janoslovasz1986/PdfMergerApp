@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PdfMergerApp.MainPage">
-    <Grid RowDefinitions="*,Auto">
+    <Grid RowDefinitions="*,Auto, Auto">
 
         <!-- Lista -->
         <CollectionView x:Name="MyCollectionView" Grid.Row="0">
@@ -14,8 +14,19 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
+        <!-- ÚJ: töltésjelző -->
+        <VerticalStackLayout Grid.Row="1"
+                         IsVisible="{Binding IsBusy}"
+                         HorizontalOptions="Center">
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           Color="Blue"
+                           HeightRequest="50"/>
+            <Label Text="PDF összefűzése folyamatban..."
+               HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
         <!-- Alsó gomb -->
-        <HorizontalStackLayout>
+        <HorizontalStackLayout Grid.Row="2">
             <Button Grid.Row="1"
                 Text="add pdf"
                 HeightRequest="60"
