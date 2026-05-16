@@ -116,6 +116,10 @@ namespace PdfMergerApp
                 BtnAddPdf.IsEnabled = true;
                 BtnClear.IsEnabled = true;
                 BtnCreatePdf.IsEnabled = true;
+
+                if (GlobalVariables.vibrateOnDone)
+                    Vibration.Default.Vibrate(TimeSpan.FromSeconds(1));
+
                 await DeleteTempFiles();
                 await ClearGlobalVariables();
             }
@@ -163,20 +167,7 @@ namespace PdfMergerApp
                 return new Regex(@"/Type\s*/Page[^s]").Matches(sr.ReadToEnd()).Count;
             }
         }
-        private async void Vibrate_Clicked(object sender, EventArgs e)
-        {
-            var platform = DeviceInfo.Platform;
 
-            if (platform.ToString() == "Android")
-            {
-                int secondsToVibrate = Random.Shared.Next(1, 7);
-                TimeSpan vibrationLength = TimeSpan.FromSeconds(secondsToVibrate);
-
-                Vibration.Default.Vibrate(vibrationLength);
-
-            }
-
-        }
         private void VibrateStopButton_Clicked(object sender, EventArgs e) =>
                     Vibration.Default.Cancel();
 
@@ -324,5 +315,6 @@ namespace PdfMergerApp
         public static string outputFileNameCreatedOnDeviceInnerStorage = "";
         public static string androidDestinationPath = "";
         public static string androidDestinationFinalName = "";
+        public static bool vibrateOnDone = false;
     }
 }

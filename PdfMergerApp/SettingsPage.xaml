@@ -4,28 +4,36 @@
              x:Class="PdfMergerApp.SettingsPage"
              Title="Beállítások">
 
-    <VerticalStackLayout Padding="20" Spacing="10">
+	<VerticalStackLayout Padding="20" Spacing="10">
 
-        <Label Text="Kimeneti fájl neve" FontSize="16"/>
-
-        <HorizontalStackLayout Spacing="8">
-            <Entry x:Name="FileNameEntry"
+		<Label Text="Kimeneti fájl neve" FontSize="16"/>
+		<HorizontalStackLayout Spacing="8">
+			<Entry x:Name="FileNameEntry"
                    Placeholder="pl. merged_doc"
-                   WidthRequest="220"
-                   Text="fájl neve"/>
-            <Label Text=".pdf"
+                   WidthRequest="220"/>
+			<Label Text=".pdf"
                    VerticalOptions="Center"
                    FontSize="16"/>
-        </HorizontalStackLayout>
+		</HorizontalStackLayout>
 
-        <Button Text="Mentés"
+		<BoxView HeightRequest="1" Color="LightGray" Margin="0,8"/>
+
+		<Label Text="Rezgés kész PDF után" FontSize="16"/>
+		<Switch x:Name="VibrateSwitch" Toggled="VibrateSwitch_Toggled"/>
+
+		<BoxView HeightRequest="1" Color="LightGray" Margin="0,8"/>
+
+		<Label Text="(hamarosan...)" FontSize="16" TextColor="Gray"/>
+		<Switch IsEnabled="False" Opacity="0.4"/>
+
+		<Button Text="Mentés"
                 Clicked="SaveSettings_Clicked"
                 Margin="0,10,0,0"/>
 
-        <Label x:Name="ConfirmLabel"
+		<Label x:Name="ConfirmLabel"
                Text=""
                TextColor="Green"/>
 
-    </VerticalStackLayout>
+	</VerticalStackLayout>
 
 </ContentPage>

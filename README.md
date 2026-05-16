@@ -45,6 +45,4 @@ Egy egyszerű Android alkalmazás PDF fájlok összefűzéséhez, .NET MAUI seg�
 - A fájlnév formátuma: `[beállított_név]_[időbélyeg].pdf`
 - Jelszóval védett PDF-ek megnyitásához `UnethicalReading` mód szükséges
 
-## Licenc
 
-MIT License
