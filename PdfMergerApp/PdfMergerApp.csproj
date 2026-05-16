@@ -48,6 +48,14 @@
 		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|AnyCPU'">
+	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|x64'">
+	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.png" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />

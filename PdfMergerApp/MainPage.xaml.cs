@@ -1,4 +1,6 @@
-﻿using Android.OS;
+﻿#if ANDROID
+using Android.OS;
+#endif
 using CommunityToolkit.Maui.Storage;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
