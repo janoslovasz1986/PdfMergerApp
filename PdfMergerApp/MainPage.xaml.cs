@@ -16,6 +16,7 @@ namespace PdfMergerApp
     {
         int count = 0;
         //bool IsBusy = false;
+        private CancellationTokenSource _animCts;
         private readonly ILogger<MainPage> _logger;
 
         public MainPage(ILogger<MainPage> logger)
@@ -58,9 +59,12 @@ namespace PdfMergerApp
                 await DisplayAlert("Hiba", "Nincs PDF kiválasztva!", "OK");
                 return;
             }
+            BtnAddPdf.IsEnabled = false;
+            BtnClear.IsEnabled = false;
+            BtnCreatePdf.IsEnabled = false;
 
             //IsBusy = true; // jelző BE
-
+            StartLoadingAnimation(); // ÚJ
 
             string outputPdfPath = "";
             //outputPdfPath = Path.Combine(FileSystem.AppDataDirectory, "3.pdf");
@@ -75,7 +79,7 @@ namespace PdfMergerApp
             {
                 await Task.Run(() =>
                 {
-                    IsBusy = true; // jelző BE
+                    //IsBusy = true; // jelző BE
                     //await DisplayAlert("", "Pdf Összefüzése...", "OK");
                     using (PdfWriter writer = new PdfWriter(outputPdfPath))
                     using (PdfDocument destPdf = new PdfDocument(writer))
@@ -108,9 +112,12 @@ namespace PdfMergerApp
 
             finally
             {
-                IsBusy = false; // jelző KI – hiba esetén is!
-                //await DeleteTempFiles();
-                //await ClearGlobalVariables();
+                StopLoadingAnimation();
+                BtnAddPdf.IsEnabled = true;
+                BtnClear.IsEnabled = true;
+                BtnCreatePdf.IsEnabled = true;
+                await DeleteTempFiles();
+                await ClearGlobalVariables();
             }
 
             //copy the file to downloads
@@ -173,6 +180,14 @@ namespace PdfMergerApp
         private void VibrateStopButton_Clicked(object sender, EventArgs e) =>
                     Vibration.Default.Cancel();
 
+        /*
+        private async void TestAnim_Clicked(object sender, EventArgs e)
+        {
+            var btn = sender as Button;
+            await btn.ScaleTo(1.5, 500, Easing.SinInOut);
+            await btn.ScaleTo(1.0, 500, Easing.SinInOut);
+        }
+        */
 
         private async void SaveToTxt_Clicked(object sender, EventArgs e)
         {
@@ -266,6 +281,26 @@ namespace PdfMergerApp
             });
 
 
+        }
+
+        private void StartLoadingAnimation()
+        {
+            LoadingOverlay.IsVisible = true;
+
+            var pulse = new Animation
+                {
+                    { 0.0, 0.5, new Animation(v => LoadingIcon.Scale = v, 1.0, 1.2, Easing.SinInOut) },
+                    { 0.5, 1.0, new Animation(v => LoadingIcon.Scale = v, 1.2, 1.0, Easing.SinInOut) }
+                };
+
+            pulse.Commit(LoadingIcon, "PulseAnim", length: 1000, repeat: () => true);
+        }
+
+        private void StopLoadingAnimation()
+        {
+            LoadingIcon.AbortAnimation("PulseAnim");
+            LoadingIcon.Scale = 1.0;
+            LoadingOverlay.IsVisible = false;
         }
 
         public async Task ClearGlobalVariables()

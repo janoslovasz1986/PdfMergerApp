@@ -2,47 +2,39 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PdfMergerApp.MainPage">
-    <Grid RowDefinitions="*,Auto, Auto">
+    <Grid RowDefinitions="*,Auto,Auto">
 
         <!-- Lista -->
         <CollectionView x:Name="MyCollectionView" Grid.Row="0">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Label Text="{Binding .}"
-                           Padding="10"/>
+                    <Label Text="{Binding .}" Padding="10"/>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- ÚJ: töltésjelző -->
+        <!-- töltésjelző -->
         <VerticalStackLayout Grid.Row="1"
-                         IsVisible="{Binding IsBusy}"
-                         HorizontalOptions="Center">
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                           Color="Blue"
-                           HeightRequest="50"/>
+                             x:Name="LoadingOverlay"
+                             IsVisible="False"
+                             HorizontalOptions="Center">
+            <Image x:Name="LoadingIcon"
+                   Source="pdficon.png"
+                   HeightRequest="100"
+                   WidthRequest="100"
+                   HorizontalOptions="Center"/>
             <Label Text="PDF összefűzése folyamatban..."
-               HorizontalOptions="Center"/>
+                   HorizontalOptions="Center"
+                   Margin="0,10,0,0"/>
         </VerticalStackLayout>
 
-        <!-- Alsó gomb -->
-        <HorizontalStackLayout Grid.Row="2">
-            <Button Grid.Row="1"
-                Text="add pdf"
-                HeightRequest="60"
-                Margin="10"
-                Clicked="selectPdf"/>
-            <Button Grid.Row="1"
-                Text="clear"
-                HeightRequest="60"
-                Margin="10"
-                Clicked="clearSelection"/>
-            <Button Grid.Row="1"
-                Text="create pdf"
-                HeightRequest="60"
-                Margin="10"
-                Clicked="createPdf"/>
-
+        <!-- Alsó gombok -->
+        <HorizontalStackLayout Grid.Row="2" HorizontalOptions="Center">
+            <Button x:Name="BtnAddPdf" Text="add pdf" HeightRequest="60" Margin="10" Clicked="selectPdf"/>
+            <Button x:Name="BtnClear" Text="clear" HeightRequest="60" Margin="10" Clicked="clearSelection"/>
+            <Button x:Name="BtnCreatePdf" Text="create pdf" HeightRequest="60" Margin="10" Clicked="createPdf"/>
+            <!--<Button Text="TESZT anim" Clicked="TestAnim_Clicked" HeightRequest="60" Margin="10"/> -->
         </HorizontalStackLayout>
+
     </Grid>
 </ContentPage>
