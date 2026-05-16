@@ -101,7 +101,7 @@ namespace PdfMergerApp
                     });
 
                 await DisplayAlert("OK", $"PDF létrejött. Összesen {GlobalVariables.sumOfPages} oldal.", "OK");
-                await DisplayAlert("OK", "Másolás kezdödik....", "OK");
+                //await DisplayAlert("OK", "Másolás kezdödik....", "OK");
 
             }
             catch (Exception ex)
@@ -124,7 +124,7 @@ namespace PdfMergerApp
             try
             {
                 await MoveFileFromAppDirectoryToDownloadAsync(FileSystem.AppDataDirectory, GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
-                await DisplayAlert("OK", "Másolás kész", "OK");
+                //await DisplayAlert("OK", "Másolás kész", "OK");
             }
             catch (Exception ex)
             {
@@ -135,7 +135,7 @@ namespace PdfMergerApp
             try
             {
                 await DeleteTempFiles();
-                await DisplayAlert("OK", "Temp fájlok törölve", "OK");
+                //await DisplayAlert("OK", "Temp fájlok törölve", "OK");
                 await ClearGlobalVariables();
             }
             catch (Exception ex)
