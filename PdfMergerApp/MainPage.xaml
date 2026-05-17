@@ -1,17 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:PdfMergerApp"
              x:Class="PdfMergerApp.MainPage">
     <Grid RowDefinitions="*,Auto,Auto">
 
-        <!-- Lista -->
-        <CollectionView x:Name="MyCollectionView" Grid.Row="0">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Label Text="{Binding .}" Padding="10"/>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <!-- Felső rész: két oszlop -->
+        <Grid Grid.Row="0" ColumnDefinitions="130,*">
+
+            <!-- Bal: fájl lista -->
+            <CollectionView x:Name="MyCollectionView" Grid.Column="0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding ., StringFormat='{0}'}"
+                           Padding="8"
+                           FontSize="12"
+                           LineBreakMode="TailTruncation"
+                           MaximumWidthRequest="120"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Jobb: oldal preview -->
+            <CollectionView x:Name="PagesCollectionView" Grid.Column="1">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="4" VerticalItemSpacing="4"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="local:PdfPageItem">
+                        <Border Stroke="LightGray" StrokeThickness="1" Padding="4" Margin="4">
+                            <VerticalStackLayout>
+                                <Image Source="{Binding Preview}"
+                                   HeightRequest="160"
+                                   Aspect="AspectFit"/>
+                                <Label Text="{Binding DisplayName}"
+                                   HorizontalOptions="Center"
+                                   FontSize="11"/>
+                                <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                                    <Button Text="▲" HeightRequest="32" WidthRequest="40" FontSize="12"
+                                        Clicked="MovePageUp_Clicked" CommandParameter="{Binding .}"/>
+                                    <Button Text="▼" HeightRequest="32" WidthRequest="40" FontSize="12"
+                                        Clicked="MovePageDown_Clicked" CommandParameter="{Binding .}"/>
+                                    <Button Text="✕" HeightRequest="32" WidthRequest="40" FontSize="12"
+                                        TextColor="Red"
+                                        Clicked="DeletePage_Clicked" CommandParameter="{Binding .}"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </Grid>
+
 
         <!-- töltésjelző -->
         <VerticalStackLayout Grid.Row="1"

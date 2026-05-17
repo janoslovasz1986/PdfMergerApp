@@ -25,8 +25,8 @@ namespace PdfMergerApp
         {
             _logger = logger;
             InitializeComponent();
-
             MyCollectionView.ItemsSource = GlobalVariables.inputPdf;
+            PagesCollectionView.ItemsSource = GlobalVariables.pages;
         }
 
 
@@ -81,29 +81,23 @@ namespace PdfMergerApp
             {
                 await Task.Run(() =>
                 {
-                    //IsBusy = true; // jelző BE
-                    //await DisplayAlert("", "Pdf Összefüzése...", "OK");
-                    using (PdfWriter writer = new PdfWriter(outputPdfPath))
-                    using (PdfDocument destPdf = new PdfDocument(writer))
-                    {
-                        PdfMerger merger = new PdfMerger(destPdf);
+                    using PdfWriter writer = new PdfWriter(outputPdfPath);
+                    using PdfDocument destPdf = new PdfDocument(writer);
+                    PdfMerger merger = new PdfMerger(destPdf);
 
-                        for (int i = 0; i < GlobalVariables.inputPdf.Count; i++)
-                        {
-                            string inputPdfPath = Path.Combine(FileSystem.AppDataDirectory, GlobalVariables.inputPdf[i]);
-                            using (PdfReader reader = new PdfReader(inputPdfPath))
-                            using (PdfDocument pdf = new PdfDocument(reader))
-                            {
-                                reader.SetUnethicalReading(true);
-                                merger.Merge(pdf, 1, pdf.GetNumberOfPages());
-                                GlobalVariables.sumOfPages++;
-                            }
-                        }
+                    for (int i = 0; i < GlobalVariables.pages.Count; i++)
+                    {
+                        var pageItem = GlobalVariables.pages[i];
+                        string inputPdfPath = Path.Combine(FileSystem.AppDataDirectory, pageItem.FileName);
+                        using PdfReader reader = new PdfReader(inputPdfPath);
+                        using PdfDocument pdf = new PdfDocument(reader);
+                        reader.SetUnethicalReading(true);
+                        merger.Merge(pdf, pageItem.PageNumber, pageItem.PageNumber); 
+                        GlobalVariables.sumOfPages++;
                     }
-                    });
+                });
 
                 await DisplayAlert("OK", $"PDF létrejött. Összesen {GlobalVariables.sumOfPages} oldal.", "OK");
-                //await DisplayAlert("OK", "Másolás kezdödik....", "OK");
 
             }
             catch (Exception ex)
@@ -173,14 +167,6 @@ namespace PdfMergerApp
         private void VibrateStopButton_Clicked(object sender, EventArgs e) =>
                     Vibration.Default.Cancel();
 
-        /*
-        private async void TestAnim_Clicked(object sender, EventArgs e)
-        {
-            var btn = sender as Button;
-            await btn.ScaleTo(1.5, 500, Easing.SinInOut);
-            await btn.ScaleTo(1.0, 500, Easing.SinInOut);
-        }
-        */
 
         private async void SaveToTxt_Clicked(object sender, EventArgs e)
         {
@@ -256,11 +242,18 @@ namespace PdfMergerApp
         {
             var result = await FilePicker.Default.PickAsync();
             if (result == null) return;
+
             var destPath = Path.Combine(FileSystem.AppDataDirectory, result.FileName);
             GlobalVariables.inputPdf.Add(result.FileName.ToString());
+
             using var sourceStream = await result.OpenReadAsync();
             using var destStream = File.Create(destPath);
             await sourceStream.CopyToAsync(destStream);
+            destStream.Close();
+
+#if ANDROID
+            await LoadPdfPagesAsync(destPath);
+#endif
         }
 
 
@@ -296,16 +289,98 @@ namespace PdfMergerApp
             LoadingOverlay.IsVisible = false;
         }
 
+        private void MovePageUp_Clicked(object sender, EventArgs e)
+        {
+            var btn = sender as Button;
+            var item = btn.CommandParameter as PdfPageItem;
+            var index = GlobalVariables.pages.IndexOf(item);
+            if (index > 0)
+                GlobalVariables.pages.Move(index, index - 1);
+        }
+
+        private void MovePageDown_Clicked(object sender, EventArgs e)
+        {
+            var btn = sender as Button;
+            var item = btn.CommandParameter as PdfPageItem;
+            var index = GlobalVariables.pages.IndexOf(item);
+            if (index < GlobalVariables.pages.Count - 1)
+                GlobalVariables.pages.Move(index, index + 1);
+        }
+
+        private void DeletePage_Clicked(object sender, EventArgs e)
+        {
+            var btn = sender as Button;
+            var item = btn.CommandParameter as PdfPageItem;
+            GlobalVariables.pages.Remove(item);
+        }
+
+
+#if ANDROID
+        private async Task LoadPdfPagesAsync(string filePath)
+        {
+            await Task.Run(() =>
+            {
+                var file = new Java.IO.File(filePath);
+                var fd = Android.OS.ParcelFileDescriptor.Open(file,
+                    Android.OS.ParcelFileMode.ReadOnly);
+
+                using var renderer = new Android.Graphics.Pdf.PdfRenderer(fd);
+
+                for (int i = 0; i < renderer.PageCount; i++)
+                {
+                    using var page = renderer.OpenPage(i);
+
+                    int width = 300;
+                    int height = (int)(width * page.Height / (float)page.Width);
+
+                    var bitmap = Android.Graphics.Bitmap.CreateBitmap(
+                        width, height, Android.Graphics.Bitmap.Config.Argb8888);
+                    bitmap.EraseColor(Android.Graphics.Color.White);
+                    page.Render(bitmap, null, null,
+                        Android.Graphics.Pdf.PdfRenderMode.ForDisplay);
+
+                    using var stream = new MemoryStream();
+                    bitmap.Compress(Android.Graphics.Bitmap.CompressFormat.Png, 80, stream);
+                    stream.Position = 0;
+                    var bytes = stream.ToArray();
+
+                    var pageItem = new PdfPageItem
+                    {
+                        FileName = Path.GetFileName(filePath),
+                        PageNumber = i + 1,
+                        Preview = ImageSource.FromStream(() => new MemoryStream(bytes))
+                    };
+
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        GlobalVariables.pages.Add(pageItem);
+                    });
+                }
+            });
+        }
+#endif
+
         public async Task ClearGlobalVariables()
         {
             await Task.Run(() =>
             {
-
-                GlobalVariables.inputPdf.Clear();
-                GlobalVariables.outputPdf = "";
-
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    GlobalVariables.inputPdf.Clear();
+                    GlobalVariables.pages.Clear(); 
+                    GlobalVariables.outputPdf = "";
+                    GlobalVariables.sumOfPages = 0; 
+                });
             });
         }
+    }
+
+    public class PdfPageItem
+    {
+        public string FileName { get; set; }
+        public int PageNumber { get; set; }
+        public ImageSource Preview { get; set; }
+        public string DisplayName => $"{PageNumber}. oldal";
     }
 
     public static class GlobalVariables
@@ -318,5 +393,6 @@ namespace PdfMergerApp
         public static string androidDestinationPath = "";
         public static string androidDestinationFinalName = "";
         public static bool vibrateOnDone = false;
+        public static ObservableCollection<PdfPageItem> pages = new ObservableCollection<PdfPageItem>();
     }
 }
