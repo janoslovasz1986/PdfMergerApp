@@ -65,17 +65,29 @@
                                         <Label Text="{Binding DisplayName}"
                                        HorizontalOptions="Center"
                                        FontSize="11"/>
-                                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="3">
-                                            <Button Text="▲" HeightRequest="28" WidthRequest="32" FontSize="10"
-                                            Padding="0" Margin="-4"
-                                            Clicked="MovePageUp_Clicked" CommandParameter="{Binding .}"/>
-                                            <Button Text="▼" HeightRequest="28" WidthRequest="32" FontSize="10"
-                                            Padding="0" Margin="-4"
-                                            Clicked="MovePageDown_Clicked" CommandParameter="{Binding .}"/>
-                                            <Button Text="✕" HeightRequest="28" WidthRequest="32" FontSize="10"
-                                            Padding="0" Margin="-4"
-                                            TextColor="Red"
-                                            Clicked="DeletePage_Clicked" CommandParameter="{Binding .}"/>
+                                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                                            <Label Text="▲" FontSize="16"
+                                                   Padding="6,2"
+                                                   HorizontalOptions="Center">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="MovePageUp_Clicked" CommandParameter="{Binding .}"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                            <Label Text="▼" FontSize="16"
+                                                   Padding="6,2"
+                                                   HorizontalOptions="Center">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="MovePageDown_Clicked" CommandParameter="{Binding .}"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                            <Label Text="✕" FontSize="16"
+                                                   TextColor="Red"
+                                                   Padding="6,2"
+                                                   HorizontalOptions="Center">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="DeletePage_Clicked" CommandParameter="{Binding .}"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
                                         </HorizontalStackLayout>
                                     </VerticalStackLayout>
                                 </Border>

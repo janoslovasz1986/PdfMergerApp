@@ -275,28 +275,25 @@ namespace PdfMergerApp
             LoadingOverlay.IsVisible = false;
         }
 
-        private void MovePageUp_Clicked(object sender, EventArgs e)
+        private void MovePageUp_Clicked(object sender, TappedEventArgs e)
         {
-            var btn = sender as Button;
-            var item = btn.CommandParameter as PdfPageItem;
+            var item = e.Parameter as PdfPageItem;
             var index = GlobalVariables.pages.IndexOf(item);
             if (index > 0)
                 GlobalVariables.pages.Move(index, index - 1);
         }
 
-        private void MovePageDown_Clicked(object sender, EventArgs e)
+        private void MovePageDown_Clicked(object sender, TappedEventArgs e)
         {
-            var btn = sender as Button;
-            var item = btn.CommandParameter as PdfPageItem;
+            var item = e.Parameter as PdfPageItem;
             var index = GlobalVariables.pages.IndexOf(item);
             if (index < GlobalVariables.pages.Count - 1)
                 GlobalVariables.pages.Move(index, index + 1);
         }
 
-        private void DeletePage_Clicked(object sender, EventArgs e)
+        private void DeletePage_Clicked(object sender, TappedEventArgs e)
         {
-            var btn = sender as Button;
-            var item = btn.CommandParameter as PdfPageItem;
+            var item = e.Parameter as PdfPageItem;
             GlobalVariables.pages.Remove(item);
         }
 
