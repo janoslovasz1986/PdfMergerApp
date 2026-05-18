@@ -33,7 +33,6 @@ namespace PdfMergerApp
         private async void clearSelection(object sender, EventArgs e)
         {
             await DeleteTempFiles();
-            await DisplayAlert("OK", "Kiválasztás törölve", "OK");
             await ClearGlobalVariables();
 
         }
@@ -357,9 +356,12 @@ namespace PdfMergerApp
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     GlobalVariables.inputPdf.Clear();
-                    GlobalVariables.pages.Clear(); 
+                    GlobalVariables.pages.Clear();
                     GlobalVariables.outputPdf = "";
-                    GlobalVariables.sumOfPages = 0; 
+                    GlobalVariables.sumOfPages = 0;
+                    GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage = "";
+                    GlobalVariables.androidDestinationPath = "";
+                    GlobalVariables.androidDestinationFinalName = "";
                 });
             });
         }

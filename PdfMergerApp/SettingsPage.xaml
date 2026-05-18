@@ -4,40 +4,50 @@
              x:Class="PdfMergerApp.SettingsPage"
              Title="Beállítások">
 
-	<VerticalStackLayout Padding="20" Spacing="10">
+    <VerticalStackLayout Padding="20" Spacing="0">
 
-		<Label Text="Kimeneti fájl neve" FontSize="16"/>
-		<HorizontalStackLayout Spacing="8">
-			<Entry x:Name="FileNameEntry"
+        <!-- Fájlnév -->
+        <Label Text="Kimeneti fájl neve" FontSize="13" TextColor="Gray" Margin="0,16,0,4"/>
+        <HorizontalStackLayout Spacing="8">
+            <Entry x:Name="FileNameEntry"
                    Placeholder="pl. merged_doc"
                    WidthRequest="220"/>
-			<Label Text=".pdf"
-                   VerticalOptions="Center"
-                   FontSize="16"/>
-		</HorizontalStackLayout>
-
-		<BoxView HeightRequest="1" Color="LightGray" Margin="0,8"/>
-
-		<Label Text="Rezgés kész PDF után" FontSize="16"/>
-		<Switch x:Name="VibrateSwitch" Toggled="VibrateSwitch_Toggled"/>
-
-		<BoxView HeightRequest="1" Color="LightGray" Margin="0,8"/>
-
-        <Label Text="Kész PDF automatikus megnyitása" FontSize="16" Margin="0,20,0,0"/>
-
-        <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-            <Switch x:Name="AutoOpenSwitch" IsToggled="False" Toggled="AutoOpenSwitch_Toggled"/>
-            <Label x:Name="AutoOpenLabel" Text="Kikapcsolva" VerticalOptions="Center"/>
+            <Label Text=".pdf" VerticalOptions="Center" FontSize="16"/>
+            <Button Text="Mentés"
+                    Clicked="SaveSettings_Clicked"
+                    HeightRequest="40"
+                    Padding="12,0"/>
         </HorizontalStackLayout>
+        <Label x:Name="ConfirmLabel" Text="" TextColor="Green" Margin="0,4,0,0" FontSize="13"/>
 
-        <Button Text="Mentés"
-                Clicked="SaveSettings_Clicked"
-                Margin="0,10,0,0"/>
+        <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
 
-		<Label x:Name="ConfirmLabel"
-               Text=""
-               TextColor="Green"/>
+        <!-- Rezgés -->
+        <Grid ColumnDefinitions="*,Auto" Margin="0,4">
+            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                <Label Text="Rezgés" FontSize="16"/>
+                <Label Text="Értesítés rezgéssel ha kész a PDF" FontSize="13" TextColor="Gray"/>
+            </VerticalStackLayout>
+            <Switch x:Name="VibrateSwitch"
+                    Grid.Column="1"
+                    Toggled="VibrateSwitch_Toggled"
+                    VerticalOptions="Center"/>
+        </Grid>
 
-	</VerticalStackLayout>
+        <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
+
+        <!-- Automatikus megnyitás -->
+        <Grid ColumnDefinitions="*,Auto" Margin="0,4">
+            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                <Label Text="Automatikus megnyitás" FontSize="16"/>
+                <Label Text="Kész PDF megnyitása mentés után" FontSize="13" TextColor="Gray"/>
+            </VerticalStackLayout>
+            <Switch x:Name="AutoOpenSwitch"
+                    Grid.Column="1"
+                    Toggled="AutoOpenSwitch_Toggled"
+                    VerticalOptions="Center"/>
+        </Grid>
+
+    </VerticalStackLayout>
 
 </ContentPage>
