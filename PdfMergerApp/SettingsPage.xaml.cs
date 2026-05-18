@@ -8,12 +8,17 @@
             FileNameEntry.Text = GlobalVariables.outputFileName;
             VibrateSwitch.IsToggled = GlobalVariables.vibrateOnDone;
             AutoOpenSwitch.IsToggled = GlobalVariables.autoOpenPdf;
-            //AutoOpenLabel.Text = GlobalVariables.autoOpenPdf ? "Bekapcsolva" : "Kikapcsolva";
+            LargePreviewSwitch.IsToggled = GlobalVariables.previewHeight == 300;
         }
 
         private void VibrateSwitch_Toggled(object sender, ToggledEventArgs e)
         {
             GlobalVariables.vibrateOnDone = e.Value;
+        }
+
+        private void LargePreviewSwitch_Toggled(object sender, ToggledEventArgs e)
+        {
+            GlobalVariables.previewHeight = e.Value ? 300 : 160;
         }
 
         private void AutoOpenSwitch_Toggled(object sender, ToggledEventArgs e)

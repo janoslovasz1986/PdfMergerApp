@@ -347,6 +347,16 @@ namespace PdfMergerApp
                 }
             });
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            // újratölti az itemeket hogy a PreviewHeight frissüljön
+            var temp = GlobalVariables.pages.ToList();
+            GlobalVariables.pages.Clear();
+            foreach (var item in temp)
+                GlobalVariables.pages.Add(item);
+        }
 #endif
 
         public async Task ClearGlobalVariables()
@@ -373,6 +383,7 @@ namespace PdfMergerApp
         public int PageNumber { get; set; }
         public ImageSource Preview { get; set; }
         public string DisplayName => $"{PageNumber}. oldal";
+        public int PreviewHeight => GlobalVariables.previewHeight;
     }
 
     public static class GlobalVariables
@@ -387,5 +398,6 @@ namespace PdfMergerApp
         public static bool vibrateOnDone = false;
         public static ObservableCollection<PdfPageItem> pages = new ObservableCollection<PdfPageItem>();
         public static bool autoOpenPdf = false;
+        public static int previewHeight = 160;
     }
 }
