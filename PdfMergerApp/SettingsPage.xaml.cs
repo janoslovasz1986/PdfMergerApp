@@ -13,7 +13,11 @@
 
         private void VibrateSwitch_Toggled(object sender, ToggledEventArgs e)
         {
+            if (!(GlobalVariables.vibrateOnDone))
+                Vibration.Default.Vibrate(TimeSpan.FromSeconds(0.5));
             GlobalVariables.vibrateOnDone = e.Value;
+         
+
         }
 
         private void LargePreviewSwitch_Toggled(object sender, ToggledEventArgs e)

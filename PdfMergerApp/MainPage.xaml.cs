@@ -123,7 +123,7 @@ namespace PdfMergerApp
                 BtnCreatePdf.IsEnabled = true;
 
                 if (GlobalVariables.vibrateOnDone)
-                    Vibration.Default.Vibrate(TimeSpan.FromSeconds(1));
+                    Vibration.Default.Vibrate(TimeSpan.FromSeconds(0.5));
             }
 
             if (mergeSuccess)

@@ -46,6 +46,7 @@
                 <Switch x:Name="VibrateSwitch"
                         Grid.Column="1"
                         Toggled="VibrateSwitch_Toggled"
+                        OnColor="Green"
                         VerticalOptions="Center"/>
             </Grid>
 
@@ -60,6 +61,7 @@
                 <Switch x:Name="AutoOpenSwitch"
                         Grid.Column="1"
                         Toggled="AutoOpenSwitch_Toggled"
+                        OnColor="Green"
                         VerticalOptions="Center"/>
             </Grid>
 
@@ -73,6 +75,7 @@
                 <Switch x:Name="LargePreviewSwitch"
                         Grid.Column="1"
                         Toggled="LargePreviewSwitch_Toggled"
+                        OnColor="Green"
                         VerticalOptions="Center"/>
             </Grid>
 
