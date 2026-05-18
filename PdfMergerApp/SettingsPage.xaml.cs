@@ -9,6 +9,7 @@
             VibrateSwitch.IsToggled = GlobalVariables.vibrateOnDone;
             AutoOpenSwitch.IsToggled = GlobalVariables.autoOpenPdf;
             LargePreviewSwitch.IsToggled = GlobalVariables.previewHeight == 300;
+            DarkModeSwitch.IsToggled = Application.Current.UserAppTheme == AppTheme.Dark;
         }
 
         private void VibrateSwitch_Toggled(object sender, ToggledEventArgs e)
@@ -61,6 +62,11 @@
 
             }
 
+        }
+
+        private void DarkModeSwitch_Toggled(object sender, ToggledEventArgs e)
+        {
+            Application.Current.UserAppTheme = e.Value ? AppTheme.Dark : AppTheme.Light;
         }
     }
 }

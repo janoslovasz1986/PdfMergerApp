@@ -79,6 +79,20 @@
                         VerticalOptions="Center"/>
             </Grid>
 
+            <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
+
+            <Grid ColumnDefinitions="*,Auto" Margin="0,4">
+                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                    <Label Text="Sötét mód" FontSize="16"/>
+                    <Label Text="Sötét témára váltás" FontSize="13" TextColor="Gray"/>
+                </VerticalStackLayout>
+                <Switch x:Name="DarkModeSwitch"
+            Grid.Column="1"
+            OnColor="Green"
+            Toggled="DarkModeSwitch_Toggled"
+            VerticalOptions="Center"/>
+            </Grid>
+
         </VerticalStackLayout>
 
     </Grid>
