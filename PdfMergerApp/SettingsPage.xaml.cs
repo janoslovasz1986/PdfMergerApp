@@ -18,13 +18,13 @@
 
         private void LargePreviewSwitch_Toggled(object sender, ToggledEventArgs e)
         {
-            GlobalVariables.previewHeight = e.Value ? 300 : 160;
+            GlobalVariables.previewHeight = e.Value ? 400 : 160;
+            GlobalVariables.previewSpan = e.Value ? 1 : 2;
         }
 
         private void AutoOpenSwitch_Toggled(object sender, ToggledEventArgs e)
         {
             GlobalVariables.autoOpenPdf = e.Value;
-            //AutoOpenLabel.Text = e.Value ? "Bekapcsolva" : "Kikapcsolva";
         }
 
         private void SaveSettings_Clicked(object sender, EventArgs e)

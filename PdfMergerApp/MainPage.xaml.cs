@@ -351,7 +351,12 @@ namespace PdfMergerApp
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            // újratölti az itemeket hogy a PreviewHeight frissüljön
+
+            // Span frissítése
+            if (PagesCollectionView.ItemsLayout is GridItemsLayout gridLayout)
+                gridLayout.Span = GlobalVariables.previewSpan;
+
+            // Itemek újratöltése
             var temp = GlobalVariables.pages.ToList();
             GlobalVariables.pages.Clear();
             foreach (var item in temp)
@@ -397,7 +402,8 @@ namespace PdfMergerApp
         public static string androidDestinationFinalName = "";
         public static bool vibrateOnDone = false;
         public static ObservableCollection<PdfPageItem> pages = new ObservableCollection<PdfPageItem>();
-        public static bool autoOpenPdf = false;
+        public static bool autoOpenPdf = true;
         public static int previewHeight = 160;
+        public static int previewSpan = 2;
     }
 }
