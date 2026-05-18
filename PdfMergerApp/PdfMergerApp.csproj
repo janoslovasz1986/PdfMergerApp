@@ -28,10 +28,10 @@
 		<MauiXamlInflator>SourceGen</MauiXamlInflator>
 
 		<!-- Display name -->
-		<ApplicationTitle>PdfMergerApp</ApplicationTitle>
+		<ApplicationTitle>Pdf Merger</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.pdfmergerapp</ApplicationId>
+		<ApplicationId>com.lovijani.pdfmerger</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>

@@ -3,10 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:PdfMergerApp"
              x:Class="PdfMergerApp.MainPage">
-    <Grid RowDefinitions="*,Auto,Auto">
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
+
+        <BoxView Grid.Row="0" 
+             HeightRequest="50" 
+             Color="#F0F0F0"/>
 
         <!-- Felső rész: két oszlop -->
-        <Grid Grid.Row="0" ColumnDefinitions="130,*" Padding="8" ColumnSpacing="8">
+        <Grid Grid.Row="1" ColumnDefinitions="130,*" Padding="8" ColumnSpacing="8">
 
             <!-- Bal: fájl lista -->
             <Border Grid.Column="0"
@@ -85,7 +89,7 @@
 
 
         <!-- töltésjelző -->
-        <VerticalStackLayout Grid.Row="1"
+        <VerticalStackLayout Grid.Row="2"
                              x:Name="LoadingOverlay"
                              IsVisible="False"
                              HorizontalOptions="Center">
@@ -100,7 +104,7 @@
         </VerticalStackLayout>
 
         <!-- Alsó gombok -->
-        <HorizontalStackLayout Grid.Row="2" HorizontalOptions="Center">
+        <HorizontalStackLayout Grid.Row="3" HorizontalOptions="Center">
             <Button x:Name="BtnAddPdf" Text="add pdf" HeightRequest="60" Margin="10" Clicked="selectPdf"/>
             <Button x:Name="BtnClear" Text="clear" HeightRequest="60" Margin="10" Clicked="clearSelection"/>
             <Button x:Name="BtnCreatePdf" Text="create pdf" HeightRequest="60" Margin="10" Clicked="createPdf"/>
