@@ -81,19 +81,19 @@ namespace PdfMergerApp
             {
                 await Task.Run(() =>
                 {
-                    using PdfWriter writer = new PdfWriter(outputPdfPath);
-                    using PdfDocument destPdf = new PdfDocument(writer);
-                    PdfMerger merger = new PdfMerger(destPdf);
-
-                    for (int i = 0; i < GlobalVariables.pages.Count; i++)
+                    using (PdfWriter writer = new PdfWriter(outputPdfPath))
+                    using (PdfDocument destPdf = new PdfDocument(writer))
                     {
-                        var pageItem = GlobalVariables.pages[i];
-                        string inputPdfPath = Path.Combine(FileSystem.AppDataDirectory, pageItem.FileName);
-                        using PdfReader reader = new PdfReader(inputPdfPath);
-                        using PdfDocument pdf = new PdfDocument(reader);
-                        reader.SetUnethicalReading(true);
-                        merger.Merge(pdf, pageItem.PageNumber, pageItem.PageNumber); 
-                        GlobalVariables.sumOfPages++;
+                        foreach (var fileName in GlobalVariables.inputPdf)
+                        {
+                            string inputPdfPath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+                            using (PdfReader reader = new PdfReader(inputPdfPath).SetUnethicalReading(true))
+                            using (PdfDocument sourcePdf = new PdfDocument(reader))
+                            {
+                                sourcePdf.CopyPagesTo(1, sourcePdf.GetNumberOfPages(), destPdf);
+                                GlobalVariables.sumOfPages += sourcePdf.GetNumberOfPages();
+                            }
+                        }
                     }
                 });
 
@@ -328,33 +328,36 @@ namespace PdfMergerApp
 
                 for (int i = 0; i < renderer.PageCount; i++)
                 {
-                    using var page = renderer.OpenPage(i);
-
-                    int width = 300;
-                    int height = (int)(width * page.Height / (float)page.Width);
-
-                    var bitmap = Android.Graphics.Bitmap.CreateBitmap(
-                        width, height, Android.Graphics.Bitmap.Config.Argb8888);
-                    bitmap.EraseColor(Android.Graphics.Color.White);
-                    page.Render(bitmap, null, null,
-                        Android.Graphics.Pdf.PdfRenderMode.ForDisplay);
-
-                    using var stream = new MemoryStream();
-                    bitmap.Compress(Android.Graphics.Bitmap.CompressFormat.Png, 80, stream);
-                    stream.Position = 0;
-                    var bytes = stream.ToArray();
-
-                    var pageItem = new PdfPageItem
+                    using (var page = renderer.OpenPage(i))
                     {
-                        FileName = Path.GetFileName(filePath),
-                        PageNumber = i + 1,
-                        Preview = ImageSource.FromStream(() => new MemoryStream(bytes))
-                    };
+                        int width = 300;
+                        int height = (int)(width * page.Height / (float)page.Width);
 
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        GlobalVariables.pages.Add(pageItem);
-                    });
+                        var bitmap = Android.Graphics.Bitmap.CreateBitmap(
+                            width, height, Android.Graphics.Bitmap.Config.Argb8888);
+                        bitmap.EraseColor(Android.Graphics.Color.White);
+                        page.Render(bitmap, null, null,
+                            Android.Graphics.Pdf.PdfRenderMode.ForDisplay);
+
+                        page.Close();
+
+                        using var stream = new MemoryStream();
+                        bitmap.Compress(Android.Graphics.Bitmap.CompressFormat.Png, 80, stream);
+                        stream.Position = 0;
+                        var bytes = stream.ToArray();
+
+                        var pageItem = new PdfPageItem
+                        {
+                            FileName = Path.GetFileName(filePath),
+                            PageNumber = i + 1,
+                            Preview = ImageSource.FromStream(() => new MemoryStream(bytes))
+                        };
+
+                        MainThread.BeginInvokeOnMainThread(() =>
+                        {
+                            GlobalVariables.pages.Add(pageItem);
+                        });
+                    } 
                 }
             });
         }
