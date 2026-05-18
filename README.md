@@ -1,6 +1,7 @@
 # PdfMergerApp 📄
 
-Egy Android alkalmazás PDF fájlok összefűzéséhez, .NET MAUI segítségével.
+Egy Android alkalmazás PDF fájlok összefűzéséhez, .NET MAUI platformon.
+Készült Claude segítségével.
 
 ## Funkciók
 

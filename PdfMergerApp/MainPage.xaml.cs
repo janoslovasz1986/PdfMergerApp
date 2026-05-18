@@ -61,21 +61,20 @@ namespace PdfMergerApp
                 await DisplayAlert("Hiba", "Nincs PDF kiválasztva!", "OK");
                 return;
             }
+
             BtnAddPdf.IsEnabled = false;
             BtnClear.IsEnabled = false;
             BtnCreatePdf.IsEnabled = false;
+            StartLoadingAnimation();
 
-            //IsBusy = true; // jelző BE
-            StartLoadingAnimation(); // ÚJ
-
-            string outputPdfPath = "";
-            //outputPdfPath = Path.Combine(FileSystem.AppDataDirectory, "3.pdf");
             GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage = "output_temp.pdf";
-            outputPdfPath = Path.Combine(FileSystem.AppDataDirectory, GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
+            string outputPdfPath = Path.Combine(FileSystem.AppDataDirectory,
+                GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
 
-            string inputPdfPath1 = "";
-            string inputPdfPath2 = "";
+            bool mergeSuccess = false;
 
+            // snapshot a merge előtt, hogy a clear ne befolyásolja
+            var pageSnapshot = GlobalVariables.pages.ToList();
 
             try
             {
@@ -84,28 +83,39 @@ namespace PdfMergerApp
                     using (PdfWriter writer = new PdfWriter(outputPdfPath))
                     using (PdfDocument destPdf = new PdfDocument(writer))
                     {
-                        foreach (var fileName in GlobalVariables.inputPdf)
+                        var openPdfs = new Dictionary<string, PdfDocument>();
+                        try
                         {
-                            string inputPdfPath = Path.Combine(FileSystem.AppDataDirectory, fileName);
-                            using (PdfReader reader = new PdfReader(inputPdfPath).SetUnethicalReading(true))
-                            using (PdfDocument sourcePdf = new PdfDocument(reader))
+                            foreach (var pageItem in pageSnapshot)
                             {
-                                sourcePdf.CopyPagesTo(1, sourcePdf.GetNumberOfPages(), destPdf);
-                                GlobalVariables.sumOfPages += sourcePdf.GetNumberOfPages();
+                                if (!openPdfs.ContainsKey(pageItem.FileName))
+                                {
+                                    string path = Path.Combine(FileSystem.AppDataDirectory, pageItem.FileName);
+                                    var reader = new PdfReader(path).SetUnethicalReading(true);
+                                    openPdfs[pageItem.FileName] = new PdfDocument(reader);
+                                }
+
+                                var sourcePdf = openPdfs[pageItem.FileName];
+                                sourcePdf.CopyPagesTo(pageItem.PageNumber, pageItem.PageNumber, destPdf);
+                                GlobalVariables.sumOfPages++;
                             }
+                        }
+                        finally
+                        {
+                            foreach (var pdf in openPdfs.Values)
+                                pdf.Close();
                         }
                     }
                 });
 
+                mergeSuccess = true;
                 await DisplayAlert("OK", $"PDF létrejött. Összesen {GlobalVariables.sumOfPages} oldal.", "OK");
-
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error merging PDFs");
                 await DisplayAlert("Hiba", ex.Message, "OK");
             }
-
             finally
             {
                 StopLoadingAnimation();
@@ -115,46 +125,36 @@ namespace PdfMergerApp
 
                 if (GlobalVariables.vibrateOnDone)
                     Vibration.Default.Vibrate(TimeSpan.FromSeconds(1));
-
-                await DeleteTempFiles();
-                await ClearGlobalVariables();
             }
 
-            //copy the file to downloads
-            try
+            if (mergeSuccess)
             {
-                await MoveFileFromAppDirectoryToDownloadAsync(FileSystem.AppDataDirectory, GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
-                //await DisplayAlert("OK", "Másolás kész", "OK");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error moving PDF to downloads");
-                await DisplayAlert("Hiba", ex.Message, "OK");
+                try
+                {
+                    await MoveFileFromAppDirectoryToDownloadAsync(FileSystem.AppDataDirectory,
+                        GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error moving PDF to downloads");
+                    await DisplayAlert("Hiba", ex.Message, "OK");
+                }
+
+                try
+                {
+                    if (GlobalVariables.autoOpenPdf)
+                        await OpenCreatedPdf();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error opening PDF");
+                    await DisplayAlert("Hiba", ex.Message, "OK");
+                }
             }
 
-            try
-            {
-                await DeleteTempFiles();
-                //await DisplayAlert("OK", "Temp fájlok törölve", "OK");
-                await ClearGlobalVariables();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error deleting temp files");
-                await DisplayAlert("Hiba", ex.Message, "OK");
-            }
-
-            try 
-            { 
             
-                await OpenCreatedPdf();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error opening created PDF");
-                await DisplayAlert("Hiba", ex.Message, "OK");
-            }
-
+            await DeleteTempFiles();
+            await ClearGlobalVariables();
         }
         static int get_pageCcount(string file)
         {
@@ -212,30 +212,17 @@ namespace PdfMergerApp
 
         public static async Task DeleteTempFiles()
         {
-
-# if ANDROID
-            string sourceFilePath1 = Path.Combine(FileSystem.AppDataDirectory, "1.pdf");
-            string sourceFilePath2 = Path.Combine(FileSystem.AppDataDirectory, "2.pdf");
-            string sourceFilePath3 = Path.Combine(FileSystem.AppDataDirectory, "3.pdf");
-            string sourceFilePath4 = Path.Combine(FileSystem.AppDataDirectory, GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
-            //string sourceFilePath = Path.Combine(sourcePath, fileName);
-
-            if (File.Exists(sourceFilePath1))
+#if ANDROID
+            foreach (var fileName in GlobalVariables.inputPdf)
             {
-                File.Delete(sourceFilePath1);
+                string path = Path.Combine(FileSystem.AppDataDirectory, fileName);
+                if (File.Exists(path)) File.Delete(path);
             }
 
-            if (File.Exists(sourceFilePath2))
-            {
-                File.Delete(sourceFilePath2);
-            }
-
-            if (File.Exists(sourceFilePath3))
-            {
-                File.Delete(sourceFilePath3);
-            }
-
-# endif
+            string outputTemp = Path.Combine(FileSystem.AppDataDirectory,
+                GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
+            if (File.Exists(outputTemp)) File.Delete(outputTemp);
+#endif
         }
 
         public async Task CopyFileFromDownloadToAppDirectory()
@@ -397,5 +384,6 @@ namespace PdfMergerApp
         public static string androidDestinationFinalName = "";
         public static bool vibrateOnDone = false;
         public static ObservableCollection<PdfPageItem> pages = new ObservableCollection<PdfPageItem>();
+        public static bool autoOpenPdf = false;
     }
 }

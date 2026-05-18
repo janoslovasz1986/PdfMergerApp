@@ -7,11 +7,19 @@
             InitializeComponent();
             FileNameEntry.Text = GlobalVariables.outputFileName;
             VibrateSwitch.IsToggled = GlobalVariables.vibrateOnDone;
+            AutoOpenSwitch.IsToggled = GlobalVariables.autoOpenPdf;
+            AutoOpenLabel.Text = GlobalVariables.autoOpenPdf ? "Bekapcsolva" : "Kikapcsolva";
         }
 
         private void VibrateSwitch_Toggled(object sender, ToggledEventArgs e)
         {
             GlobalVariables.vibrateOnDone = e.Value;
+        }
+
+        private void AutoOpenSwitch_Toggled(object sender, ToggledEventArgs e)
+        {
+            GlobalVariables.autoOpenPdf = e.Value;
+            AutoOpenLabel.Text = e.Value ? "Bekapcsolva" : "Kikapcsolva";
         }
 
         private void SaveSettings_Clicked(object sender, EventArgs e)
