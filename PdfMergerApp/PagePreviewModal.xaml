@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PdfMergerApp.PagePreviewModal"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="Black">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <!-- Preview kép -->
+        <Image x:Name="PreviewImage"
+               Grid.Row="0"
+               Aspect="AspectFit"
+               Margin="16"/>
+
+        <!-- Gombok -->
+        <HorizontalStackLayout Grid.Row="1"
+                               HorizontalOptions="Center"
+                               Spacing="16"
+                               Margin="0,0,0,30">
+
+            <Button Text="↺ Bal"
+                    Clicked="RotateLeft_Clicked"
+                    HeightRequest="48"
+                    WidthRequest="100"/>
+
+            <Button Text="↻ Jobb"
+                    Clicked="RotateRight_Clicked"
+                    HeightRequest="48"
+                    WidthRequest="100"/>
+
+            <Button Text="✕ Bezár"
+                    Clicked="Close_Clicked"
+                    HeightRequest="48"
+                    WidthRequest="100"
+                    TextColor="Red"/>
+
+        </HorizontalStackLayout>
+
+    </Grid>
+
+</ContentPage>

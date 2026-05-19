@@ -60,8 +60,14 @@
                                 <Border Stroke="LightGray" StrokeThickness="1" Padding="4" Margin="4">
                                     <VerticalStackLayout>
                                         <Image Source="{Binding Preview}"
-                                       HeightRequest="{Binding PreviewHeight}"
-                                       Aspect="AspectFit"/>
+                                               HeightRequest="{Binding PreviewHeight}"
+                                               Rotation="{Binding Rotation}"
+                                               Aspect="AspectFit">
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="PreviewImage_Tapped"
+                                                         CommandParameter="{Binding .}"/>
+                                                </Image.GestureRecognizers>
+                                        </Image>
                                         <Label Text="{Binding DisplayName}"
                                        HorizontalOptions="Center"
                                        FontSize="11"/>

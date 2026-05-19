@@ -96,6 +96,15 @@ namespace PdfMergerApp
 
                                 var sourcePdf = openPdfs[pageItem.FileName];
                                 sourcePdf.CopyPagesTo(pageItem.PageNumber, pageItem.PageNumber, destPdf);
+
+                                // Elforgatás alkalmazása
+                                if (pageItem.Rotation != 0)
+                                {
+                                    var copiedPage = destPdf.GetPage(destPdf.GetNumberOfPages());
+                                    int currentRotation = copiedPage.GetRotation();
+                                    copiedPage.SetRotation((currentRotation + pageItem.Rotation) % 360);
+                                }
+
                                 GlobalVariables.sumOfPages++;
                             }
                         }
@@ -297,6 +306,12 @@ namespace PdfMergerApp
             GlobalVariables.pages.Remove(item);
         }
 
+        private async void PreviewImage_Tapped(object sender, TappedEventArgs e)
+        {
+            var item = e.Parameter as PdfPageItem;
+            await Navigation.PushModalAsync(new PagePreviewModal(item));
+        }
+
 
 #if ANDROID
         private async Task LoadPdfPagesAsync(string filePath)
@@ -386,6 +401,7 @@ namespace PdfMergerApp
         public ImageSource Preview { get; set; }
         public string DisplayName => $"{PageNumber}. oldal";
         public int PreviewHeight => GlobalVariables.previewHeight;
+        public int Rotation { get; set; } = 0;
     }
 
     public static class GlobalVariables
