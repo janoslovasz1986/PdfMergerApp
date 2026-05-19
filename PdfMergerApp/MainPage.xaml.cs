@@ -5,12 +5,14 @@ using CommunityToolkit.Maui.Storage;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using Microsoft.Extensions.Logging;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.Maui.ApplicationModel;
 using Org.BouncyCastle.Asn1.Utilities;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace PdfMergerApp
 {
@@ -394,14 +396,28 @@ namespace PdfMergerApp
         }
     }
 
-    public class PdfPageItem
+    public class PdfPageItem : INotifyPropertyChanged
     {
         public string FileName { get; set; }
         public int PageNumber { get; set; }
         public ImageSource Preview { get; set; }
         public string DisplayName => $"{PageNumber}. oldal";
         public int PreviewHeight => GlobalVariables.previewHeight;
-        public int Rotation { get; set; } = 0;
+
+        private int _rotation = 0;
+        public int Rotation
+        {
+            get => _rotation;
+            set
+            {
+                _rotation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 
     public static class GlobalVariables

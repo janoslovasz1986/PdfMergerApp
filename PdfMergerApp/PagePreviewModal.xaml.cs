@@ -7,11 +7,7 @@ namespace PdfMergerApp
     public partial class PagePreviewModal : ContentPage
     {
         private readonly PdfPageItem _item;
-
-        private double _startScale = 1;
-        private bool _pinchStarted = false;
-        private double _startX = 0;
-        private double _startY = 0;
+        private double _currentScale = 1.0;
 
         public PagePreviewModal(PdfPageItem item)
         {
@@ -19,6 +15,18 @@ namespace PdfMergerApp
             _item = item;
             PreviewImage.Source = item.Preview;
             PreviewImage.Rotation = item.Rotation;
+        }
+
+        private void ZoomIn_Clicked(object sender, EventArgs e)
+        {
+            _currentScale = Math.Min(_currentScale + 0.25, 4.0);
+            PreviewImage.Scale = _currentScale;
+        }
+
+        private void ZoomOut_Clicked(object sender, EventArgs e)
+        {
+            _currentScale = Math.Max(_currentScale - 0.25, 0.5);
+            PreviewImage.Scale = _currentScale;
         }
 
         private void RotateLeft_Clicked(object sender, EventArgs e)
@@ -36,58 +44,6 @@ namespace PdfMergerApp
         private async void Close_Clicked(object sender, EventArgs e)
         {
             await Navigation.PopModalAsync();
-        }
-        private void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
-        {
-            if (e.Status == GestureStatus.Started)
-            {
-                _startScale = PreviewImage.Scale;
-                _pinchStarted = true;
-            }
-
-            if (e.Status == GestureStatus.Running)
-            {
-                // ha Started még nem tüzelt, itt kapjuk el
-                if (!_pinchStarted)
-                {
-                    _startScale = PreviewImage.Scale;
-                    _pinchStarted = true;
-                }
-
-                PreviewImage.Scale = Math.Clamp(_startScale * e.Scale, 1, 5);
-            }
-
-            if (e.Status == GestureStatus.Completed)
-            {
-                _pinchStarted = false;
-
-                if (PreviewImage.Scale <= 1)
-                {
-                    PreviewImage.TranslationX = 0;
-                    PreviewImage.TranslationY = 0;
-                }
-            }
-        }
-
-        private void OnPanUpdated(object sender, PanUpdatedEventArgs e)
-        {
-            if (e.StatusType == GestureStatus.Started)
-            {
-                _startX = PreviewImage.TranslationX;
-                _startY = PreviewImage.TranslationY;
-            }
-
-            if (e.StatusType == GestureStatus.Running && PreviewImage.Scale > 1)
-            {
-                PreviewImage.TranslationX = _startX + e.TotalX;
-                PreviewImage.TranslationY = _startY + e.TotalY;
-            }
-
-            if (e.StatusType == GestureStatus.Completed && PreviewImage.Scale <= 1)
-            {
-                PreviewImage.TranslationX = 0;
-                PreviewImage.TranslationY = 0;
-            }
         }
     }
 }
