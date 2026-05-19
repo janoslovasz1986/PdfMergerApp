@@ -314,6 +314,10 @@ namespace PdfMergerApp
             await Navigation.PushModalAsync(new PagePreviewModal(item));
         }
 
+        private void QuitApp_Clicked(object sender, EventArgs e)
+        {
+            Application.Current.Quit();
+        }
 
 #if ANDROID
         private async Task LoadPdfPagesAsync(string filePath)

@@ -126,7 +126,7 @@
             <Button x:Name="BtnAddPdf" Text="add pdf" HeightRequest="60" Margin="10" Clicked="selectPdf"/>
             <Button x:Name="BtnClear" Text="clear" HeightRequest="60" Margin="10" Clicked="clearSelection"/>
             <Button x:Name="BtnCreatePdf" Text="create pdf" HeightRequest="60" Margin="10" Clicked="createPdf"/>
-            <!--<Button Text="TESZT anim" Clicked="TestAnim_Clicked" HeightRequest="60" Margin="10"/> -->
+            <Button x:Name="BtnQuit" Text="quit" HeightRequest="60" Margin="10" Clicked="QuitApp_Clicked"/>
         </HorizontalStackLayout>
 
     </Grid>
