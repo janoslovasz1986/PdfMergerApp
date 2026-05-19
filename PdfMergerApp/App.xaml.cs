@@ -8,7 +8,7 @@ namespace PdfMergerApp
         {
             InitializeComponent();
             //MainPage = new SplashPage();
-            Windows[0].Page = new SplashPage();
+            //Windows[0].Page = new SplashPage();
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

@@ -328,7 +328,7 @@ namespace PdfMergerApp
                 {
                     using (var page = renderer.OpenPage(i))
                     {
-                        int width = 300;
+                        int width = 600; 
                         int height = (int)(width * page.Height / (float)page.Width);
 
                         var bitmap = Android.Graphics.Bitmap.CreateBitmap(

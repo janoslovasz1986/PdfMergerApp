@@ -8,10 +8,18 @@
     <Grid RowDefinitions="*,Auto">
 
         <!-- Preview kép -->
-        <Image x:Name="PreviewImage"
-               Grid.Row="0"
-               Aspect="AspectFit"
-               Margin="16"/>
+        <ContentView Grid.Row="0" 
+             IsClippedToBounds="True">
+            <Image x:Name="PreviewImage"
+           Aspect="AspectFit"
+           AnchorX="0.5"
+           AnchorY="0.5">
+                <Image.GestureRecognizers>
+                    <PinchGestureRecognizer PinchUpdated="OnPinchUpdated"/>
+                    <PanGestureRecognizer PanUpdated="OnPanUpdated"/>
+                </Image.GestureRecognizers>
+            </Image>
+        </ContentView>
 
         <!-- Gombok -->
         <HorizontalStackLayout Grid.Row="1"
