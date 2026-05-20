@@ -16,7 +16,7 @@ namespace PdfMergerApp
             base.OnAppearing();
             StartPulseAnimation();
             await Task.Delay(2500);
-            Application.Current.MainPage = new AppShell();
+            Application.Current.Windows[0].Page = new AppShell();
         }
 
         private void StartPulseAnimation()

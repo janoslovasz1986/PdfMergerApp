@@ -165,7 +165,18 @@ namespace PdfMergerApp
             
             await DeleteTempFiles();
             await ClearGlobalVariables();
+            await AutoQuit();
         }
+
+        private async Task AutoQuit()
+        {
+            if (GlobalVariables.autoQuit)
+            {
+                await Task.Delay(5000);
+                Application.Current.Quit();
+            }
+        }
+
         static int get_pageCcount(string file)
         {
             using (StreamReader sr = new StreamReader(File.OpenRead(file)))
@@ -240,16 +251,25 @@ namespace PdfMergerApp
             var result = await FilePicker.Default.PickAsync();
             if (result == null) return;
 
+            // Ellenőrzés MIELŐTT hozzáadjuk a listához
+            if (!result.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+            {
+                await DisplayAlert("", "Csak PDF fájlt lehet kiválasztani!", "OK");
+                return;
+            }
+
             var destPath = Path.Combine(FileSystem.AppDataDirectory, result.FileName);
-            GlobalVariables.inputPdf.Add(result.FileName.ToString());
 
             using var sourceStream = await result.OpenReadAsync();
             using var destStream = File.Create(destPath);
             await sourceStream.CopyToAsync(destStream);
             destStream.Close();
 
+            // Csak sikeres másolás után kerül a listába
+            GlobalVariables.inputPdf.Add(result.FileName.ToString());
+
 #if ANDROID
-            await LoadPdfPagesAsync(destPath);
+    await LoadPdfPagesAsync(destPath);
 #endif
         }
 
@@ -316,6 +336,7 @@ namespace PdfMergerApp
 
         private void QuitApp_Clicked(object sender, EventArgs e)
         {
+         
             Application.Current.Quit();
         }
 
@@ -438,5 +459,6 @@ namespace PdfMergerApp
         public static bool autoOpenPdf = true;
         public static int previewHeight = 160;
         public static int previewSpan = 2;
+        public static bool autoQuit = false;
     }
 }
