@@ -24,96 +24,114 @@
                FontAttributes="Bold"
                Padding="20,12,20,8"/>
 
-        <!-- Tartalom -->
-        <VerticalStackLayout Grid.Row="2" Padding="20" Spacing="0">
+        <!-- Görgethető tartalom -->
+        <ScrollView Grid.Row="2">
 
-            <!-- Fájlnév -->
-            <Label Text="Kimeneti fájl neve" FontSize="13" TextColor="Gray" Margin="0,16,0,4"/>
-            <HorizontalStackLayout Spacing="8">
-                <Entry x:Name="FileNameEntry"
-                       Placeholder="pl. merged_doc"
-                       WidthRequest="220"/>
-                <Label Text=".pdf" VerticalOptions="Center" FontSize="16"/>
-                <Button Text="Mentés"
-                        Clicked="SaveSettings_Clicked"
-                        HeightRequest="40"
-                        Padding="12,0"/>
-            </HorizontalStackLayout>
-            <Label x:Name="ConfirmLabel" Text="" TextColor="Green" Margin="0,4,0,0" FontSize="13"/>
+                <!-- Tartalom -->
+            <VerticalStackLayout Grid.Row="2" Padding="20" Spacing="0">
 
-            <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
+                <!-- Fájlnév -->
+                <Label Text="Kimeneti fájl neve" FontSize="13" TextColor="Gray" Margin="0,16,0,4"/>
+                <HorizontalStackLayout Spacing="8">
+                    <Entry x:Name="FileNameEntry"
+                           Placeholder="pl. merged_doc"
+                           WidthRequest="220"/>
+                    <Label Text=".pdf" VerticalOptions="Center" FontSize="16"/>
+                    <Button Text="Mentés"
+                            Clicked="SaveSettings_Clicked"
+                            HeightRequest="40"
+                            Padding="12,0"/>
+                </HorizontalStackLayout>
+                <Label x:Name="ConfirmLabel" Text="" TextColor="Green" Margin="0,4,0,0" FontSize="13"/>
 
-            <!-- Rezgés -->
-            <Grid ColumnDefinitions="*,Auto" Margin="0,4">
-                <VerticalStackLayout Grid.Column="0" Spacing="2">
-                    <Label Text="Rezgés" FontSize="16"/>
-                    <Label Text="Értesítés rezgéssel ha kész a PDF" FontSize="13" TextColor="Gray"/>
-                </VerticalStackLayout>
-                <Switch x:Name="VibrateSwitch"
+                <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
+
+                <!-- Rezgés -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,4">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="Rezgés" FontSize="16"/>
+                        <Label Text="Értesítés rezgéssel ha kész a PDF" FontSize="13" TextColor="Gray"/>
+                    </VerticalStackLayout>
+                    <Switch x:Name="VibrateSwitch"
+                            Grid.Column="1"
+                            Toggled="VibrateSwitch_Toggled"
+                            OnColor="Green"
+                            VerticalOptions="Center"/>
+                </Grid>
+
+                <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
+
+                <!-- Automatikus megnyitás -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,4">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="Automatikus megnyitás" FontSize="16"/>
+                        <Label Text="Kész PDF megnyitása mentés után" FontSize="13" TextColor="Gray"/>
+                    </VerticalStackLayout>
+                    <Switch x:Name="AutoOpenSwitch"
+                            Grid.Column="1"
+                            Toggled="AutoOpenSwitch_Toggled"
+                            OnColor="Green"
+                            VerticalOptions="Center"/>
+                </Grid>
+
+                <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
+
+                <Grid ColumnDefinitions="*,Auto" Margin="0,4">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="Nagy preview" FontSize="16"/>
+                        <Label Text="Nagyobb oldal előnézet a főoldalon" FontSize="13" TextColor="Gray"/>
+                    </VerticalStackLayout>
+                    <Switch x:Name="LargePreviewSwitch"
+                            Grid.Column="1"
+                            Toggled="LargePreviewSwitch_Toggled"
+                            OnColor="Green"
+                            VerticalOptions="Center"/>
+                </Grid>
+
+                <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
+
+                <Grid ColumnDefinitions="*,Auto" Margin="0,4">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="Sötét mód" FontSize="16"/>
+                        <Label Text="Sötét témára váltás" FontSize="13" TextColor="Gray"/>
+                    </VerticalStackLayout>
+                    <Switch x:Name="DarkModeSwitch"
                         Grid.Column="1"
-                        Toggled="VibrateSwitch_Toggled"
                         OnColor="Green"
+                        Toggled="DarkModeSwitch_Toggled"
                         VerticalOptions="Center"/>
-            </Grid>
+                </Grid>
 
-            <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
+                <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
 
-            <!-- Automatikus megnyitás -->
-            <Grid ColumnDefinitions="*,Auto" Margin="0,4">
-                <VerticalStackLayout Grid.Column="0" Spacing="2">
-                    <Label Text="Automatikus megnyitás" FontSize="16"/>
-                    <Label Text="Kész PDF megnyitása mentés után" FontSize="13" TextColor="Gray"/>
-                </VerticalStackLayout>
-                <Switch x:Name="AutoOpenSwitch"
+                <Grid ColumnDefinitions="*,Auto" Margin="0,4">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="Kikapcsolás" FontSize="16"/>
+                        <Label Text="Kilépés az appból összefűzés után" FontSize="13" TextColor="Gray"/>
+                    </VerticalStackLayout>
+                    <Switch x:Name="AutoQuitSwitch"
                         Grid.Column="1"
-                        Toggled="AutoOpenSwitch_Toggled"
                         OnColor="Green"
+                        Toggled="AutoQuitSwitch_Toggled"
                         VerticalOptions="Center"/>
-            </Grid>
+                </Grid>
 
-            <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
+                <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
 
-            <Grid ColumnDefinitions="*,Auto" Margin="0,4">
-                <VerticalStackLayout Grid.Column="0" Spacing="2">
-                    <Label Text="Nagy preview" FontSize="16"/>
-                    <Label Text="Nagyobb oldal előnézet a főoldalon" FontSize="13" TextColor="Gray"/>
-                </VerticalStackLayout>
-                <Switch x:Name="LargePreviewSwitch"
-                        Grid.Column="1"
-                        Toggled="LargePreviewSwitch_Toggled"
-                        OnColor="Green"
-                        VerticalOptions="Center"/>
-            </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="0,4">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="Jelszóvédelem" FontSize="16"/>
+                        <Label Text="A kész PDF jelszóval védve lesz" FontSize="13" TextColor="Gray"/>
+                    </VerticalStackLayout>
+                    <Switch x:Name="PasswordSwitch"
+                Grid.Column="1"
+                OnColor="Green"
+                Toggled="PasswordSwitch_Toggled"
+                VerticalOptions="Center"/>
+                </Grid>
 
-            <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
-
-            <Grid ColumnDefinitions="*,Auto" Margin="0,4">
-                <VerticalStackLayout Grid.Column="0" Spacing="2">
-                    <Label Text="Sötét mód" FontSize="16"/>
-                    <Label Text="Sötét témára váltás" FontSize="13" TextColor="Gray"/>
-                </VerticalStackLayout>
-                <Switch x:Name="DarkModeSwitch"
-                    Grid.Column="1"
-                    OnColor="Green"
-                    Toggled="DarkModeSwitch_Toggled"
-                    VerticalOptions="Center"/>
-            </Grid>
-
-            <BoxView HeightRequest="1" Color="LightGray" Margin="0,16"/>
-
-            <Grid ColumnDefinitions="*,Auto" Margin="0,4">
-                <VerticalStackLayout Grid.Column="0" Spacing="2">
-                    <Label Text="Kikapcsolás" FontSize="16"/>
-                    <Label Text="Kilépés az appból összefűzés után" FontSize="13" TextColor="Gray"/>
-                </VerticalStackLayout>
-                <Switch x:Name="AutoQuitSwitch"
-                    Grid.Column="1"
-                    OnColor="Green"
-                    Toggled="AutoQuitSwitch_Toggled"
-                    VerticalOptions="Center"/>
-            </Grid>
-
-        </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
 
     </Grid>
 

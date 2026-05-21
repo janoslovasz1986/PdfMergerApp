@@ -7,6 +7,8 @@ namespace PdfMergerApp
         public App()
         {
             InitializeComponent();
+            bool darkMode = Preferences.Get("darkMode", false);
+            UserAppTheme = darkMode ? AppTheme.Dark : AppTheme.Light;
 
         }
 

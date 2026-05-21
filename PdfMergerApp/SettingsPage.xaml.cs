@@ -26,6 +26,9 @@
             AutoOpenSwitch.IsToggled = GlobalVariables.autoOpenPdf;
             LargePreviewSwitch.IsToggled = GlobalVariables.previewHeight == 300;
             DarkModeSwitch.IsToggled = Application.Current.UserAppTheme == AppTheme.Dark;
+
+            PasswordSwitch.IsToggled = Preferences.Get("passwordProtect", false);
+            GlobalVariables.passwordProtect = PasswordSwitch.IsToggled;
         }
 
         private void VibrateSwitch_Toggled(object sender, ToggledEventArgs e)
@@ -95,6 +98,12 @@
         {
             GlobalVariables.autoQuit = e.Value;
             Preferences.Set("autoQuit", e.Value);
+        }
+
+        private void PasswordSwitch_Toggled(object sender, ToggledEventArgs e)
+        {
+            GlobalVariables.passwordProtect = e.Value;
+            Preferences.Set("passwordProtect", e.Value);
         }
     }
 }

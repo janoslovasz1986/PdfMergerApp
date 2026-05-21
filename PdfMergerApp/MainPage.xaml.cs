@@ -64,9 +64,34 @@ namespace PdfMergerApp
                 return;
             }
 
+
             BtnAddPdf.IsEnabled = false;
             BtnClear.IsEnabled = false;
             BtnCreatePdf.IsEnabled = false;
+
+
+
+            string password = "";
+            if (GlobalVariables.passwordProtect)
+            {
+                password = await DisplayPromptAsync(
+                    "Jelszóvédelem",
+                    "Add meg a PDF jelszavát:",
+                    "OK",
+                    "Mégse",
+                    placeholder: "jelszó...",
+                    maxLength: 50);
+
+                if (password == null) return; // mégse gomb
+                if (string.IsNullOrEmpty(password))
+                {
+                    await DisplayAlert("Hiba", "A jelszó nem lehet üres!", "OK");
+                    return;
+                }
+            }
+
+
+
             StartLoadingAnimation();
 
             GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage = "output_temp.pdf";
@@ -78,11 +103,31 @@ namespace PdfMergerApp
             // snapshot a merge előtt, hogy a clear ne befolyásolja
             var pageSnapshot = GlobalVariables.pages.ToList();
 
+
+
             try
             {
                 await Task.Run(() =>
                 {
-                    using (PdfWriter writer = new PdfWriter(outputPdfPath))
+
+                    PdfWriter writer;
+                    if (GlobalVariables.passwordProtect && !string.IsNullOrEmpty(password))
+                    {
+                        var properties = new WriterProperties()
+                            .SetStandardEncryption(
+                                System.Text.Encoding.UTF8.GetBytes(password),
+                                System.Text.Encoding.UTF8.GetBytes(password),
+                                EncryptionConstants.ALLOW_PRINTING,
+                                EncryptionConstants.ENCRYPTION_AES_128);
+                        writer = new PdfWriter(outputPdfPath, properties);
+                    }
+                    else
+                    {
+                        writer = new PdfWriter(outputPdfPath);
+                    }
+
+
+                    using (writer)
                     using (PdfDocument destPdf = new PdfDocument(writer))
                     {
                         var openPdfs = new Dictionary<string, PdfDocument>();
@@ -547,5 +592,7 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
         public static bool autoQuit = false;
         public static bool changePreview = false;
         public static int previousPreviewHeight = 400;
+        public static bool passwordProtect = false;
+        public static string pdfPassword = "";
     }
 }
