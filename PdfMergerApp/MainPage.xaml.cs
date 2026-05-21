@@ -28,7 +28,7 @@ namespace PdfMergerApp
         {
             _logger = logger;
             InitializeComponent();
-            MyCollectionView.ItemsSource = GlobalVariables.inputPdf;
+            //MyCollectionView.ItemsSource = GlobalVariables.inputPdf;
             PagesCollectionView.ItemsSource = GlobalVariables.pages;
         }
 

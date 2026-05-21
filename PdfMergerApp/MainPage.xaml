@@ -15,39 +15,10 @@
              HeightRequest="50" 
              Color="#F0F0F0"/>
 
-        <!-- Felső rész: két oszlop -->
-        <Grid Grid.Row="1" ColumnDefinitions="130,*" Padding="8" ColumnSpacing="8">
+        <Grid Grid.Row="1" Padding="8">
 
-            <!-- Bal: fájl lista -->
-            <Border Grid.Column="0"
-            Stroke="#CCCCCC"
-            StrokeThickness="1"
-            StrokeShape="RoundRectangle 8"
-            Padding="4">
-                <Grid RowDefinitions="Auto,*">
-                    <Label Grid.Row="0"
-                   Text="Fájlok"
-                   FontSize="12"
-                   TextColor="Gray"
-                   Padding="4,4,4,2"/>
-                    <CollectionView x:Name="MyCollectionView" Grid.Row="1">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Label Text="{Binding ., StringFormat='{0}'}"
-                               Padding="8"
-                               FontSize="12"
-                               LineBreakMode="TailTruncation"
-                               MaxLines="1"
-                               WidthRequest="110"/>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Grid>
-            </Border>
-
-            <!-- Jobb: oldal preview -->
-            <Border Grid.Column="1"
-            Stroke="#CCCCCC"
+            <!-- Oldal preview - teljes szélesség -->
+            <Border Stroke="#CCCCCC"
             StrokeThickness="1"
             StrokeShape="RoundRectangle 8"
             Padding="4">
@@ -66,36 +37,42 @@
                                 <Border Stroke="LightGray" StrokeThickness="1" Padding="4" Margin="4">
                                     <VerticalStackLayout>
                                         <Image Source="{Binding Preview}"
-                                               HeightRequest="{Binding PreviewHeight}"
-                                               Rotation="{Binding Rotation}"
-                                               Aspect="AspectFit">
-                                                <Image.GestureRecognizers>
-                                                    <TapGestureRecognizer Tapped="PreviewImage_Tapped"
-                                                         CommandParameter="{Binding .}"/>
-                                                </Image.GestureRecognizers>
+           HeightRequest="{Binding PreviewHeight}"
+           Rotation="{Binding Rotation}"
+           Aspect="AspectFit">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="PreviewImage_Tapped"
+                                  CommandParameter="{Binding .}"/>
+                                            </Image.GestureRecognizers>
                                         </Image>
+                                        <Label Text="{Binding FileName}"
+           HorizontalOptions="Center"
+           FontSize="10"
+           TextColor="Gray"
+           LineBreakMode="TailTruncation"
+           MaxLines="1"/>
                                         <Label Text="{Binding DisplayName}"
-                                       HorizontalOptions="Center"
-                                       FontSize="11"/>
+           HorizontalOptions="Center"
+           FontSize="11"/>
                                         <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
                                             <Label Text="▲" FontSize="16"
-                                                   Padding="6,2"
-                                                   HorizontalOptions="Center">
+                            Padding="6,2"
+                            HorizontalOptions="Center">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="MovePageUp_Clicked" CommandParameter="{Binding .}"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
                                             <Label Text="▼" FontSize="16"
-                                                   Padding="6,2"
-                                                   HorizontalOptions="Center">
+                            Padding="6,2"
+                            HorizontalOptions="Center">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="MovePageDown_Clicked" CommandParameter="{Binding .}"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
                                             <Label Text="✕" FontSize="16"
-                                                   TextColor="Red"
-                                                   Padding="6,2"
-                                                   HorizontalOptions="Center">
+                            TextColor="Red"
+                            Padding="6,2"
+                            HorizontalOptions="Center">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="DeletePage_Clicked" CommandParameter="{Binding .}"/>
                                                 </Label.GestureRecognizers>
