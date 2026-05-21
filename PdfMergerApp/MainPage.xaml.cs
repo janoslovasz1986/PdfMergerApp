@@ -2,6 +2,7 @@
 using Android.OS;
 #endif
 using CommunityToolkit.Maui.Storage;
+using iText.IO.Image;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using Microsoft.Extensions.Logging;
@@ -89,25 +90,67 @@ namespace PdfMergerApp
                         {
                             foreach (var pageItem in pageSnapshot)
                             {
-                                if (!openPdfs.ContainsKey(pageItem.FileName))
+                                string filePath = Path.Combine(FileSystem.AppDataDirectory, pageItem.FileName);
+                                bool isImage = pageItem.FileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                                               pageItem.FileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                               pageItem.FileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
+
+                                if (isImage)
                                 {
-                                    string path = Path.Combine(FileSystem.AppDataDirectory, pageItem.FileName);
-                                    var reader = new PdfReader(path).SetUnethicalReading(true);
-                                    openPdfs[pageItem.FileName] = new PdfDocument(reader);
+                                    var imageData = ImageDataFactory.Create(filePath);
+                                    float imgWidth = imageData.GetWidth();
+                                    float imgHeight = imageData.GetHeight();
+
+                                    PdfPage page;
+                                    iText.Kernel.Pdf.Canvas.PdfCanvas pdfCanvas;
+
+                                    switch (pageItem.Rotation)
+                                    {
+                                        case 90:
+                                            page = destPdf.AddNewPage(new iText.Kernel.Geom.PageSize(imgHeight, imgWidth));
+                                            pdfCanvas = new iText.Kernel.Pdf.Canvas.PdfCanvas(page);
+                                            pdfCanvas.ConcatMatrix(0, -1, 1, 0, 0, imgWidth);
+                                            break;
+                                        case 180:
+                                            page = destPdf.AddNewPage(new iText.Kernel.Geom.PageSize(imgWidth, imgHeight));
+                                            pdfCanvas = new iText.Kernel.Pdf.Canvas.PdfCanvas(page);
+                                            pdfCanvas.ConcatMatrix(-1, 0, 0, -1, imgWidth, imgHeight);
+                                            break;
+                                        case 270:
+                                            page = destPdf.AddNewPage(new iText.Kernel.Geom.PageSize(imgHeight, imgWidth));
+                                            pdfCanvas = new iText.Kernel.Pdf.Canvas.PdfCanvas(page);
+                                            pdfCanvas.ConcatMatrix(0, 1, -1, 0, imgHeight, 0);
+                                            break;
+                                        default: // 0 fok
+                                            page = destPdf.AddNewPage(new iText.Kernel.Geom.PageSize(imgWidth, imgHeight));
+                                            pdfCanvas = new iText.Kernel.Pdf.Canvas.PdfCanvas(page);
+                                            break;
+                                    }
+
+                                    pdfCanvas.AddImageAt(imageData, 0, 0, false);
+                                    GlobalVariables.sumOfPages++;
                                 }
-
-                                var sourcePdf = openPdfs[pageItem.FileName];
-                                sourcePdf.CopyPagesTo(pageItem.PageNumber, pageItem.PageNumber, destPdf);
-
-                                // Elforgatás alkalmazása
-                                if (pageItem.Rotation != 0)
+                                else
                                 {
-                                    var copiedPage = destPdf.GetPage(destPdf.GetNumberOfPages());
-                                    int currentRotation = copiedPage.GetRotation();
-                                    copiedPage.SetRotation((currentRotation + pageItem.Rotation) % 360);
-                                }
+                                    // PDF oldal másolása – meglévő logika
+                                    if (!openPdfs.ContainsKey(pageItem.FileName))
+                                    {
+                                        var reader = new PdfReader(filePath).SetUnethicalReading(true);
+                                        openPdfs[pageItem.FileName] = new PdfDocument(reader);
+                                    }
 
-                                GlobalVariables.sumOfPages++;
+                                    var sourcePdf = openPdfs[pageItem.FileName];
+                                    sourcePdf.CopyPagesTo(pageItem.PageNumber, pageItem.PageNumber, destPdf);
+
+                                    if (pageItem.Rotation != 0)
+                                    {
+                                        var copiedPage = destPdf.GetPage(destPdf.GetNumberOfPages());
+                                        int currentRotation = copiedPage.GetRotation();
+                                        copiedPage.SetRotation((currentRotation + pageItem.Rotation) % 360);
+                                    }
+
+                                    GlobalVariables.sumOfPages++;
+                                }
                             }
                         }
                         finally
@@ -248,31 +291,61 @@ namespace PdfMergerApp
 
         public async Task CopyFileFromDownloadToAppDirectory()
         {
-            var result = await FilePicker.Default.PickAsync();
+            var options = new PickOptions
+            {
+                FileTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+        {
+            { DevicePlatform.Android, new[] { "application/pdf", "image/png", "image/jpeg" } }
+        })
+            };
+
+            var result = await FilePicker.Default.PickAsync(options);
             if (result == null) return;
 
-            // Ellenőrzés MIELŐTT hozzáadjuk a listához
-            if (!result.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+            bool isPdf = result.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase);
+            bool isImage = result.FileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                           result.FileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                           result.FileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
+
+            if (!isPdf && !isImage)
             {
-                await DisplayAlert("", "Csak PDF fájlt lehet kiválasztani!", "OK");
+                await DisplayAlert("Hiba", "Csak PDF, PNG vagy JPEG fájlt lehet kiválasztani!", "OK");
                 return;
             }
 
             var destPath = Path.Combine(FileSystem.AppDataDirectory, result.FileName);
-
             using var sourceStream = await result.OpenReadAsync();
             using var destStream = File.Create(destPath);
             await sourceStream.CopyToAsync(destStream);
             destStream.Close();
 
-            // Csak sikeres másolás után kerül a listába
             GlobalVariables.inputPdf.Add(result.FileName.ToString());
 
 #if ANDROID
-    await LoadPdfPagesAsync(destPath);
+    if (isPdf)
+        await LoadPdfPagesAsync(destPath);
+    else
+        await LoadImagePageAsync(destPath, result.FileName);
 #endif
         }
 
+
+#if ANDROID
+private async Task LoadImagePageAsync(string filePath, string fileName)
+{
+    var pageItem = new PdfPageItem
+    {
+        FileName = Path.GetFileName(filePath),
+        PageNumber = 1,
+        Preview = ImageSource.FromFile(filePath)
+    };
+
+    MainThread.BeginInvokeOnMainThread(() =>
+    {
+        GlobalVariables.pages.Add(pageItem);
+    });
+}
+#endif
 
         public async Task OpenCreatedPdf()
         {
