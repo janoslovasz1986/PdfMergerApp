@@ -474,6 +474,18 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
                 _ = ClearGlobalVariables();
             }
         }
+
+        private void RotateLeft_Clicked(object sender, TappedEventArgs e)
+        {
+            var item = e.Parameter as PdfPageItem;
+            item.Rotation = (item.Rotation + 270) % 360;
+        }
+
+        private void RotateRight_Clicked(object sender, TappedEventArgs e)
+        {
+            var item = e.Parameter as PdfPageItem;
+            item.Rotation = (item.Rotation + 90) % 360;
+        }
 #endif
 
         public async Task ClearGlobalVariables()

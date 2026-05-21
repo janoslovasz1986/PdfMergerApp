@@ -55,24 +55,27 @@
                                                HorizontalOptions="Center"
                                                FontSize="11"/>
                                         <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
-                                            <Label Text="▲" FontSize="16"
-                                                Padding="6,2"
-                                                HorizontalOptions="Center">
+                                            <Label Text="▲" FontSize="16" Padding="6,2" HorizontalOptions="Center">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="MovePageUp_Clicked" CommandParameter="{Binding .}"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
-                                            <Label Text="▼" FontSize="16"
-                                                    Padding="6,2"
-                                                    HorizontalOptions="Center">
+                                            <Label Text="▼" FontSize="16" Padding="6,2" HorizontalOptions="Center">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="MovePageDown_Clicked" CommandParameter="{Binding .}"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
-                                            <Label Text="✕" FontSize="16"
-                                                    TextColor="Red"
-                                                    Padding="6,2"
-                                                    HorizontalOptions="Center">
+                                            <Label Text="↺" FontSize="16" Padding="6,2" HorizontalOptions="Center">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="RotateLeft_Clicked" CommandParameter="{Binding .}"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                            <Label Text="↻" FontSize="16" Padding="6,2" HorizontalOptions="Center">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="RotateRight_Clicked" CommandParameter="{Binding .}"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                            <Label Text="✕" FontSize="16" Padding="6,2" TextColor="Red" HorizontalOptions="Center">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="DeletePage_Clicked" CommandParameter="{Binding .}"/>
                                                 </Label.GestureRecognizers>
