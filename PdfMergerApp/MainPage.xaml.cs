@@ -33,7 +33,7 @@ namespace PdfMergerApp
         }
 
 
-        private async void clearSelection(object sender, EventArgs e)
+        public async void clearSelection(object sender, EventArgs e)
         {
             await DeleteTempFiles();
             await ClearGlobalVariables();
@@ -464,15 +464,15 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
         {
             base.OnAppearing();
 
-            // Span frissítése
             if (PagesCollectionView.ItemsLayout is GridItemsLayout gridLayout)
                 gridLayout.Span = GlobalVariables.previewSpan;
 
-            // Itemek újratöltése
-            var temp = GlobalVariables.pages.ToList();
-            GlobalVariables.pages.Clear();
-            foreach (var item in temp)
-                GlobalVariables.pages.Add(item);
+            if (GlobalVariables.previousPreviewHeight != GlobalVariables.previewHeight)
+            {
+                GlobalVariables.previousPreviewHeight = GlobalVariables.previewHeight;
+                _ = DeleteTempFiles();
+                _ = ClearGlobalVariables();
+            }
         }
 #endif
 
@@ -533,5 +533,7 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
         public static int previewHeight = 160;
         public static int previewSpan = 2;
         public static bool autoQuit = false;
+        public static bool changePreview = false;
+        public static int previousPreviewHeight = 400;
     }
 }

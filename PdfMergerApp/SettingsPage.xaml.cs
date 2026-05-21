@@ -25,6 +25,7 @@
         {
             GlobalVariables.previewHeight = e.Value ? 400 : 160;
             GlobalVariables.previewSpan = e.Value ? 1 : 2;
+            GlobalVariables.changePreview = e.Value;
         }
 
         private void AutoOpenSwitch_Toggled(object sender, ToggledEventArgs e)
