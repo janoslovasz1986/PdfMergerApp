@@ -594,5 +594,6 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
         public static int previousPreviewHeight = 400;
         public static bool passwordProtect = false;
         public static string pdfPassword = "";
+        public static string currentLanguage = "hu";
     }
 }

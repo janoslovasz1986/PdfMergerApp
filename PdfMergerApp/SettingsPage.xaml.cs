@@ -13,6 +13,10 @@
             LargePreviewSwitch.IsToggled = Preferences.Get("largePreview", true);
             DarkModeSwitch.IsToggled = Preferences.Get("darkMode", false);
 
+            // Nyelv picker beállítása
+            string lang = Preferences.Get("language", "hu");
+            LanguagePicker.SelectedIndex = lang == "en" ? 1 : 0;
+
             // GlobalVariables szinkronizálása
             GlobalVariables.outputFileName = FileNameEntry.Text;
             GlobalVariables.vibrateOnDone = VibrateSwitch.IsToggled;
@@ -29,6 +33,8 @@
 
             PasswordSwitch.IsToggled = Preferences.Get("passwordProtect", false);
             GlobalVariables.passwordProtect = PasswordSwitch.IsToggled;
+
+            ApplyLocalization();
         }
 
         private void VibrateSwitch_Toggled(object sender, ToggledEventArgs e)
@@ -62,14 +68,14 @@
             if (string.IsNullOrEmpty(name))
             {
                 ConfirmLabel.TextColor = Colors.Red;
-                ConfirmLabel.Text = "A fájlnév nem lehet üres!";
+                ConfirmLabel.Text = LocalizationManager.Get("ErrorEmptyFileName");
                 return;
             }
 
             GlobalVariables.outputFileName = name;
             Preferences.Set("outputFileName", name);
             ConfirmLabel.TextColor = Colors.Green;
-            ConfirmLabel.Text = $"Mentve: {name}.pdf";
+            ConfirmLabel.Text = $"{LocalizationManager.Get("Save")}: {name}.pdf";
         }
 
         private async void Vibrate_Clicked(object sender, EventArgs e)
@@ -104,6 +110,36 @@
         {
             GlobalVariables.passwordProtect = e.Value;
             Preferences.Set("passwordProtect", e.Value);
+        }
+
+        private void ApplyLocalization()
+        {
+            TitleLabel.Text = LocalizationManager.Get("Settings");
+            OutputFileNameLabel.Text = LocalizationManager.Get("OutputFileName");
+            SaveButton.Text = LocalizationManager.Get("Save");
+            VibrationLabel.Text = LocalizationManager.Get("Vibration");
+            VibrationDescLabel.Text = LocalizationManager.Get("VibrationDesc");
+            AutoOpenLabel.Text = LocalizationManager.Get("AutoOpen");
+            AutoOpenDescLabel.Text = LocalizationManager.Get("AutoOpenDesc");
+            LargePreviewLabel.Text = LocalizationManager.Get("LargePreview");
+            LargePreviewDescLabel.Text = LocalizationManager.Get("LargePreviewDesc");
+            DarkModeLabel.Text = LocalizationManager.Get("DarkMode");
+            DarkModeDescLabel.Text = LocalizationManager.Get("DarkModeDesc");
+            AutoQuitLabel.Text = LocalizationManager.Get("AutoQuit");
+            AutoQuitDescLabel.Text = LocalizationManager.Get("AutoQuitDesc");
+            PasswordLabel.Text = LocalizationManager.Get("PasswordProtect");
+            PasswordDescLabel.Text = LocalizationManager.Get("PasswordProtectDesc");
+            LanguageLabel.Text = LocalizationManager.Get("Language");
+            ConfirmLabel.Text = "";
+        }
+
+        private void LanguagePicker_Changed(object sender, EventArgs e)
+        {
+            string lang = LanguagePicker.SelectedIndex == 1 ? "en" : "hu";
+            LocalizationManager.SetLanguage(lang);
+            GlobalVariables.currentLanguage = lang;
+            Preferences.Set("language", lang);
+            ApplyLocalization();
         }
     }
 }
