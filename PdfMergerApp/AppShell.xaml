@@ -5,7 +5,7 @@
        x:Class="PdfMergerApp.AppShell">
 
     <TabBar>
-        <Tab Title="PDF Összefűző" Icon="pdf_icon.png">
+        <Tab Title="Főoldal" Icon="pdf_icon.png">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}"/>
         </Tab>
         <Tab Title="Beállítások" Icon="settings_icon.png">

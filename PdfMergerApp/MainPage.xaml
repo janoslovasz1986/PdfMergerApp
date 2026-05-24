@@ -9,7 +9,7 @@
         <Image Source="mergepdf_bg.png"
            Aspect="AspectFill"
            Grid.RowSpan="4"
-           Opacity="0.3"/>
+           Opacity="0.5"/>
 
         <BoxView Grid.Row="0" 
              HeightRequest="50" 
@@ -109,10 +109,10 @@
 
         <!-- Alsó gombok -->
         <HorizontalStackLayout Grid.Row="3" HorizontalOptions="Center">
-            <Button x:Name="BtnAddPdf" Text="add pdf" HeightRequest="60" Margin="10" Clicked="selectPdf"/>
-            <Button x:Name="BtnClear" Text="clear" HeightRequest="60" Margin="10" Clicked="clearSelection"/>
-            <Button x:Name="BtnCreatePdf" Text="create pdf" HeightRequest="60" Margin="10" Clicked="createPdf"/>
-            <Button x:Name="BtnQuit" Text="quit" HeightRequest="60" Margin="10" Clicked="QuitApp_Clicked"/>
+            <Button Style="{StaticResource MainButtonStyle}" x:Name="BtnAddPdf" Text="add pdf" HeightRequest="60" Margin="10" Clicked="selectPdf"/>
+            <Button Style="{StaticResource MainButtonStyle}" x:Name="BtnClear" Text="clear" HeightRequest="60" Margin="10" Clicked="clearSelection"/>
+            <Button Style="{StaticResource MainButtonStyle}" x:Name="BtnCreatePdf" Text="create pdf" HeightRequest="60" Margin="10" Clicked="createPdf"/>
+            <Button Style="{StaticResource MainButtonStyle}" x:Name="BtnQuit" Text="quit" HeightRequest="60" Margin="10" Clicked="QuitApp_Clicked"/>
         </HorizontalStackLayout>
 
     </Grid>

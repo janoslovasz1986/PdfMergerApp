@@ -6,10 +6,11 @@
 
     <Grid RowDefinitions="Auto,Auto,*">
 
-        <Image Source="mergePdf.png"
-               Aspect="AspectFill"
-               Grid.RowSpan="4"
-               Opacity="0.3"/>
+        <!-- Háttérkép -->
+        <Image Source="mergepdf_bg.png"
+           Aspect="AspectFill"
+           Grid.RowSpan="4"
+           Opacity="0.1"/>
 
         <BoxView Grid.Row="0" HeightRequest="50" Color="#F0F0F0"/>
 

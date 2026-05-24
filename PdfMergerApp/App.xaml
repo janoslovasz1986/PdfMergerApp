@@ -9,6 +9,11 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="MainButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#1A120C"/>
+                <Setter Property="TextColor" Value="#F4A541"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

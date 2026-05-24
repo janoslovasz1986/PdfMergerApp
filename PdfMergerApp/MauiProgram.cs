@@ -21,6 +21,7 @@ namespace PdfMergerApp
             //builder.Services.AddLocalization();
 
             IServiceCollection services = builder.Services;
+            builder.Services.AddSingleton<SettingsPage>();
 
             return builder.Build();
         }

@@ -20,7 +20,6 @@ namespace PdfMergerApp
     public partial class MainPage : ContentPage
     {
         int count = 0;
-        //bool IsBusy = false;
         private CancellationTokenSource _animCts;
         private readonly ILogger<MainPage> _logger;
 
@@ -30,6 +29,15 @@ namespace PdfMergerApp
             InitializeComponent();
             //MyCollectionView.ItemsSource = GlobalVariables.inputPdf;
             PagesCollectionView.ItemsSource = GlobalVariables.pages;
+
+            // SettingsPage előre betöltése
+            Task.Run(() =>
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    var _ = new SettingsPage();
+                });
+            });
         }
 
 
@@ -518,6 +526,8 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
                 _ = DeleteTempFiles();
                 _ = ClearGlobalVariables();
             }
+
+            ApplyLocalization(); 
         }
 
         private void RotateLeft_Clicked(object sender, TappedEventArgs e)
@@ -530,6 +540,14 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
         {
             var item = e.Parameter as PdfPageItem;
             item.Rotation = (item.Rotation + 90) % 360;
+        }
+
+        private void ApplyLocalization()
+        {
+            BtnAddPdf.Text = LocalizationManager.Get("AddPdf");
+            BtnClear.Text = LocalizationManager.Get("Clear");
+            BtnCreatePdf.Text = LocalizationManager.Get("FusePdf");
+            BtnQuit.Text = LocalizationManager.Get("Quit");
         }
 #endif
 

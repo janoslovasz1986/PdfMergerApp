@@ -39,7 +39,7 @@ namespace PdfMergerApp
                 ["PasswordPromptDesc"] = "Add meg a PDF jelszavát:",
                 ["Cancel"] = "Mégse",
                 ["Pages"] = "Oldalak",
-                ["AddPdf"] = "PDF hozzáadása",
+                ["AddPdf"] = "Hozzáadás",
                 ["Clear"] = "Törlés",
                 ["CreatePdf"] = "PDF létrehozása",
                 ["Quit"] = "Kilépés",
