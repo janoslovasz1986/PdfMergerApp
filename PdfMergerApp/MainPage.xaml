@@ -9,7 +9,7 @@
         <Image Source="mergepdf_bg.png"
            Aspect="AspectFill"
            Grid.RowSpan="4"
-           Opacity="0.5"/>
+           Opacity="0.4"/>
 
         <BoxView Grid.Row="0" 
              HeightRequest="50" 
