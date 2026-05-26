@@ -10,8 +10,9 @@ namespace PdfMergerApp
             InitializeComponent();
 
             string lang = Preferences.Get("language", "hu");
-            LocalizationManager.SetLanguage(lang);
             GlobalVariables.currentLanguage = lang;
+
+            Task.Run(async () => await LocalizationManager.LoadLanguageAsync(lang)).Wait();
 
             bool darkMode = Preferences.Get("darkMode", false);
             UserAppTheme = darkMode ? AppTheme.Dark : AppTheme.Light;

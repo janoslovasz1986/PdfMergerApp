@@ -112,6 +112,8 @@
                     <Picker.Items>
                         <x:String>Magyar</x:String>
                         <x:String>English</x:String>
+                        <x:String>Deutsch</x:String>
+                        <x:String>Español</x:String>
                     </Picker.Items>
                 </Picker>
 

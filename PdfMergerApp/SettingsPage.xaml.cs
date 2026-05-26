@@ -131,15 +131,27 @@
             PasswordDescLabel.Text = LocalizationManager.Get("PasswordProtectDesc");
             LanguageLabel.Text = LocalizationManager.Get("Language");
             ConfirmLabel.Text = "";
+
         }
 
-        private void LanguagePicker_Changed(object sender, EventArgs e)
+        private async void LanguagePicker_Changed(object sender, EventArgs e)
         {
-            string lang = LanguagePicker.SelectedIndex == 1 ? "en" : "hu";
-            LocalizationManager.SetLanguage(lang);
+            string lang = LanguagePicker.SelectedIndex switch
+            {
+                0 => "hu",
+                1 => "en",
+                2 => "de",
+                3 => "es",
+                _ => "hu"
+            };
+
+            await LocalizationManager.SetLanguageAsync(lang);
             GlobalVariables.currentLanguage = lang;
-            Preferences.Set("language", lang);
             ApplyLocalization();
+
+            // Tab nevek frissítése
+            if (Shell.Current is AppShell appShell)
+                appShell.ApplyLocalization();
         }
     }
 }

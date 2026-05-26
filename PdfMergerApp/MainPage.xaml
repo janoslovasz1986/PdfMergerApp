@@ -24,7 +24,7 @@
             Padding="4">
                 <Grid RowDefinitions="Auto,*">
                     <Label Grid.Row="0"
-                   Text="Old"
+                    x:Name="PagesHeaderLabel"
                    FontSize="12"
                    TextColor="Gray"
                    Padding="4,4,4,2"/>
@@ -70,11 +70,6 @@
                                                     <TapGestureRecognizer Tapped="RotateLeft_Clicked" CommandParameter="{Binding .}"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
-                                            <!--<Label Text="↻" FontSize="20" Padding="6,2" HorizontalOptions="Center">
-                                                <Label.GestureRecognizers>
-                                                    <TapGestureRecognizer Tapped="RotateRight_Clicked" CommandParameter="{Binding .}"/>
-                                                </Label.GestureRecognizers>
-                                            </Label>-->
                                             <Label Text="✕" FontSize="20" Padding="6,2" TextColor="Red" HorizontalOptions="Center">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="DeletePage_Clicked" CommandParameter="{Binding .}"/>

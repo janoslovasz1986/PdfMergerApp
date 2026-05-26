@@ -5,6 +5,7 @@
         public AppShell()
         {
             InitializeComponent();
+            ApplyLocalization();
             PreloadSettingsPage();
         }
 
@@ -25,6 +26,14 @@
                     CurrentItem = mainTab;
                 });
             });
+        }
+
+        public void ApplyLocalization()
+        {
+            var tabBar = Items[0] as TabBar;
+            if (tabBar == null) return;
+            tabBar.Items[0].Title = LocalizationManager.Get("MainTab");
+            tabBar.Items[1].Title = LocalizationManager.Get("SettingsTab");
         }
     }
 }

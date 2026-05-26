@@ -56,8 +56,10 @@ namespace PdfMergerApp
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error copying PDF to app directory");
-                await DisplayAlert("Hiba", ex.Message, "OK");
+                await DisplayAlert(
+                    LocalizationManager.Get("Error"),
+                    LocalizationManager.Get("ErrorInvalidFileType"),
+                    "OK");
                 return;
             }
         }
@@ -68,7 +70,10 @@ namespace PdfMergerApp
         {
             if (GlobalVariables.inputPdf.Count == 0)
             {
-                await DisplayAlert("Hiba", "Nincs PDF kiválasztva!", "OK");
+                await DisplayAlert(
+                    LocalizationManager.Get("Error"),
+                    LocalizationManager.Get("ErrorNoFileSelected"),
+                    "OK");
                 return;
             }
 
@@ -83,17 +88,20 @@ namespace PdfMergerApp
             if (GlobalVariables.passwordProtect)
             {
                 password = await DisplayPromptAsync(
-                    "Jelszóvédelem",
-                    "Add meg a PDF jelszavát:",
+                    LocalizationManager.Get("PasswordPromptTitle"),
+                    LocalizationManager.Get("PasswordPromptDesc"),
                     "OK",
-                    "Mégse",
-                    placeholder: "jelszó...",
+                    LocalizationManager.Get("Cancel"),
+                    placeholder: LocalizationManager.Get("PasswordPlaceholder"),
                     maxLength: 50);
 
                 if (password == null) return; // mégse gomb
                 if (string.IsNullOrEmpty(password))
                 {
-                    await DisplayAlert("Hiba", "A jelszó nem lehet üres!", "OK");
+                    await DisplayAlert(
+                            LocalizationManager.Get("Error"),
+                            LocalizationManager.Get("ErrorEmptyPassword"),
+                            "OK");
                     return;
                 }
             }
@@ -215,7 +223,10 @@ namespace PdfMergerApp
                 });
 
                 mergeSuccess = true;
-                await DisplayAlert("OK", $"PDF létrejött. Összesen {GlobalVariables.sumOfPages} oldal.", "OK");
+                await DisplayAlert(
+                "OK",
+                string.Format(LocalizationManager.Get("PdfCreated"), GlobalVariables.sumOfPages),
+                "OK");
             }
             catch (Exception ex)
             {
@@ -344,7 +355,10 @@ namespace PdfMergerApp
 
             if (!isPdf && !isImage)
             {
-                await DisplayAlert("Hiba", "Csak PDF, PNG vagy JPEG fájlt lehet kiválasztani!", "OK");
+                await DisplayAlert(
+                    LocalizationManager.Get("Error"),
+                    LocalizationManager.Get("ErrorInvalidFileType"),
+                    "OK");
                 return;
             }
 
@@ -362,6 +376,7 @@ namespace PdfMergerApp
     else
         await LoadImagePageAsync(destPath, result.FileName);
 #endif
+            MainThread.BeginInvokeOnMainThread(() => UpdatePagesHeaderLabel());
         }
 
 
@@ -448,6 +463,13 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
             Application.Current.Quit();
         }
 
+        private void UpdatePagesHeaderLabel()
+        {
+            PagesHeaderLabel.Text = GlobalVariables.pages.Count == 0
+              ? ""
+              : LocalizationManager.Get("TapToZoom");
+        }
+
 #if ANDROID
         private async Task LoadPdfPagesAsync(string filePath)
         {
@@ -510,6 +532,8 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
                 _ = ClearGlobalVariables();
             }
 
+            UpdatePagesHeaderLabel();
+
             ApplyLocalization(); 
         }
 
@@ -531,7 +555,10 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
             BtnClear.Text = LocalizationManager.Get("Clear");
             BtnCreatePdf.Text = LocalizationManager.Get("FusePdf");
             BtnQuit.Text = LocalizationManager.Get("Quit");
+
+            UpdatePagesHeaderLabel(); 
         }
+
 #endif
 
         public async Task ClearGlobalVariables()
@@ -547,6 +574,8 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
                     GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage = "";
                     GlobalVariables.androidDestinationPath = "";
                     GlobalVariables.androidDestinationFinalName = "";
+
+                    MainThread.BeginInvokeOnMainThread(() => UpdatePagesHeaderLabel());
                 });
             });
         }
@@ -598,6 +627,6 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
         public static bool passwordProtect = false;
         public static string pdfPassword = "";
         public static string currentLanguage = "hu";
-        public int sumOfSuccesfullyMergedPdfs = 0;
+        public static int sumOfSuccesfullyMergedPdfs = 0;
     }
 }
