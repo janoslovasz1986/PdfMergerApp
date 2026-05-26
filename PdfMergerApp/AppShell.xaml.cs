@@ -12,13 +12,17 @@
         {
             Task.Run(async () =>
             {
-                await Task.Delay(1500); // app indulás után
+                await Task.Delay(1500);
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    // Briefly switch to Settings tab and back
-                    var mainTab = CurrentItem;
-                    CurrentItem = Items[0].Items[1]; // Settings tab
-                    CurrentItem = mainTab; // vissza
+                    var tabBar = Items[0] as TabBar;
+                    if (tabBar == null) return;
+
+                    var mainTab = tabBar.Items[0];
+                    var settingsTab = tabBar.Items[1];
+
+                    CurrentItem = settingsTab;
+                    CurrentItem = mainTab;
                 });
             });
         }

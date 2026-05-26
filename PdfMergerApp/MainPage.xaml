@@ -42,40 +42,40 @@
                                                Aspect="AspectFit">
                                             <Image.GestureRecognizers>
                                                 <TapGestureRecognizer Tapped="PreviewImage_Tapped"
-                                  CommandParameter="{Binding .}"/>
+                                                    CommandParameter="{Binding .}"/>
                                             </Image.GestureRecognizers>
                                         </Image>
                                         <Label Text="{Binding FileName}"
                                                HorizontalOptions="Center"
                                                FontSize="10"
-                                               TextColor="Gray"
+                                               TextColor="White"
                                                LineBreakMode="TailTruncation"
                                                MaxLines="1"/>
-                                        <Label Text="{Binding DisplayName}"
+                                        <Label Text="{Binding PageInfo}"
                                                HorizontalOptions="Center"
                                                FontSize="11"/>
                                         <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
-                                            <Label Text="▲" FontSize="16" Padding="6,2" HorizontalOptions="Center">
+                                            <Label Text="▲" FontSize="20" Padding="6,2" HorizontalOptions="Center">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="MovePageUp_Clicked" CommandParameter="{Binding .}"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
-                                            <Label Text="▼" FontSize="16" Padding="6,2" HorizontalOptions="Center">
+                                            <Label Text="▼" FontSize="20" Padding="6,2" HorizontalOptions="Center">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="MovePageDown_Clicked" CommandParameter="{Binding .}"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
-                                            <Label Text="↺" FontSize="16" Padding="6,2" HorizontalOptions="Center">
+                                            <Label Text="↺" FontSize="20" Padding="6,2" HorizontalOptions="Center">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="RotateLeft_Clicked" CommandParameter="{Binding .}"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
-                                            <Label Text="↻" FontSize="16" Padding="6,2" HorizontalOptions="Center">
+                                            <!--<Label Text="↻" FontSize="20" Padding="6,2" HorizontalOptions="Center">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="RotateRight_Clicked" CommandParameter="{Binding .}"/>
                                                 </Label.GestureRecognizers>
-                                            </Label>
-                                            <Label Text="✕" FontSize="16" Padding="6,2" TextColor="Red" HorizontalOptions="Center">
+                                            </Label>-->
+                                            <Label Text="✕" FontSize="20" Padding="6,2" TextColor="Red" HorizontalOptions="Center">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="DeletePage_Clicked" CommandParameter="{Binding .}"/>
                                                 </Label.GestureRecognizers>

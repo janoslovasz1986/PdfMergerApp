@@ -574,8 +574,10 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
         public string FileName { get; set; }
         public int PageNumber { get; set; }
         public ImageSource Preview { get; set; }
-        public string DisplayName => $"{PageNumber}. oldal";
         public int PreviewHeight => GlobalVariables.previewHeight;
+
+        public string PageInfo => $"{PageNumber}/{TotalPages}";
+        public int TotalPages { get; set; }
 
         private int _rotation = 0;
         public int Rotation

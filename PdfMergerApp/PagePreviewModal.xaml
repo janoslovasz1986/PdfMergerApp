@@ -21,8 +21,8 @@
 
 			<Button Text="↺" Clicked="RotateLeft_Clicked"
                     HeightRequest="48" WidthRequest="60"/>
-			<Button Text="↻" Clicked="RotateRight_Clicked"
-                    HeightRequest="48" WidthRequest="60"/>
+			<!--<Button Text="↻" Clicked="RotateRight_Clicked"
+                    HeightRequest="48" WidthRequest="60"/>-->
 			<Button Text="−" Clicked="ZoomOut_Clicked"
                     HeightRequest="48" WidthRequest="60"
                     FontSize="22"/>
