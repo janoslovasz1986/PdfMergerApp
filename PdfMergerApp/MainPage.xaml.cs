@@ -239,6 +239,7 @@ namespace PdfMergerApp
                 {
                     await MoveFileFromAppDirectoryToDownloadAsync(FileSystem.AppDataDirectory,
                         GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
+                    GlobalVariables.sumOfSuccesfullyMergedPdfs++;
                 }
                 catch (Exception ex)
                 {
@@ -285,25 +286,6 @@ namespace PdfMergerApp
                     Vibration.Default.Cancel();
 
 
-        private async void SaveToTxt_Clicked(object sender, EventArgs e)
-        {
-            var platform = DeviceInfo.Platform;
-
-            if (platform.ToString() == "Android")
-            {
-                string text = "test message to file";
-                string outputPdfPath = Path.Combine(FileSystem.AppDataDirectory, "test.txt");
-
-                using (StreamWriter sw = new StreamWriter(outputPdfPath, true))
-                {
-                    sw.WriteLine(text);
-                }
-
-                await MoveFileFromAppDirectoryToDownloadAsync(outputPdfPath, "test.txt");
-
-            }
-
-        }
 
         public static async Task MoveFileFromAppDirectoryToDownloadAsync(string sourcePath, string fileName)
         {
@@ -501,6 +483,7 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
                         {
                             FileName = Path.GetFileName(filePath),
                             PageNumber = i + 1,
+                            TotalPages = renderer.PageCount,
                             Preview = ImageSource.FromStream(() => new MemoryStream(bytes))
                         };
 
@@ -576,7 +559,7 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
         public ImageSource Preview { get; set; }
         public int PreviewHeight => GlobalVariables.previewHeight;
 
-        public string PageInfo => $"{PageNumber}/{TotalPages}";
+        public string PageInfo => $"{PageNumber}" + " / " + $"{TotalPages}";
         public int TotalPages { get; set; }
 
         private int _rotation = 0;
@@ -615,5 +598,6 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
         public static bool passwordProtect = false;
         public static string pdfPassword = "";
         public static string currentLanguage = "hu";
+        public int sumOfSuccesfullyMergedPdfs = 0;
     }
 }

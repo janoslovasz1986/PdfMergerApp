@@ -24,7 +24,7 @@
             Padding="4">
                 <Grid RowDefinitions="Auto,*">
                     <Label Grid.Row="0"
-                   Text="Oldalak"
+                   Text="Old"
                    FontSize="12"
                    TextColor="Gray"
                    Padding="4,4,4,2"/>
