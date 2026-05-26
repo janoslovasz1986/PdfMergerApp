@@ -25,6 +25,7 @@
                     CurrentItem = settingsTab;
                     CurrentItem = mainTab;
                 });
+                GlobalVariables.sumOfSuccesfullyMergedPdfs = Preferences.Get("successfulMergeCount", 0);
             });
         }
 

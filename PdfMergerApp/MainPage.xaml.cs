@@ -246,11 +246,16 @@ namespace PdfMergerApp
 
             if (mergeSuccess)
             {
+
+                int count = Preferences.Get("successfulMergeCount", 0);
+                count++;
+                Preferences.Set("successfulMergeCount", count);
+                GlobalVariables.sumOfSuccesfullyMergedPdfs = count;
                 try
                 {
                     await MoveFileFromAppDirectoryToDownloadAsync(FileSystem.AppDataDirectory,
                         GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
-                    GlobalVariables.sumOfSuccesfullyMergedPdfs++;
+                   
                 }
                 catch (Exception ex)
                 {
