@@ -1,11 +1,12 @@
-# PdfMergerApp 📄
+# Fuse PDF 📄
 Egy Android alkalmazás PDF fájlok összefűzéséhez, .NET MAUI platformon.
 Készült Claude segítségével.
 
 ## Funkciók
-- 📂 Több PDF fájl kiválasztása a telefonról
+- 📂 Több PDF és kép (PNG, JPEG) fájl kiválasztása a telefonról
 - 👁️ PDF oldalak valódi előnézete (page preview)
 - 🔃 Oldalak átrendezése (fel/le gombok)
+- 🔄 Oldalak elforgatása (bal/jobb forgatás gombokkal)
 - 🗑️ Egyedi oldalak törlése összefűzés előtt
 - 🔗 PDF fájlok összefűzése az aktuális sorrend alapján
 - 💾 Automatikus mentés a Downloads mappába (időbélyeggel)
@@ -13,18 +14,23 @@ Készült Claude segítségével.
 - ⏳ Töltésjelző animáció összefűzés közben
 - 🔒 Gombok inaktiválása összefűzés közben
 - 🗑️ Ideiglenes fájlok automatikus törlése
+- 🔑 Jelszóvédelem a kész PDF-hez
+- 🔍 Oldalak nagyítása modal nézetben
 
 ## Beállítások
 - ✏️ Kimeneti fájlnév testreszabása
-- 📳 Opcionális rezgés értesítés elkészüléskor
 - 🔓 Kész PDF automatikus megnyitása
 - 🔍 Kis / nagy oldal előnézet váltása
 - 🌙 Sötét / világos mód választása
+- 🌍 Többnyelvű felület (Magyar, English, Deutsch, Español)
+- 🖼️ Képek A4-re igazítása vagy eredeti méretben
+- 🚪 Automatikus kilépés összefűzés után
+- 🔑 Jelszóvédelem bekapcsolása
 
 ## Képernyők
 | PDF összefűző | Beállítások |
 |---|---|
-| Fájllista + oldal preview + műveleti gombok | Fájlnév, rezgés, auto megnyitás, preview méret, téma |
+| Oldal preview + műveleti gombok | Fájlnév, rezgés, auto megnyitás, preview méret, téma, nyelv |
 
 ## Technológiák
 - [.NET MAUI](https://learn.microsoft.com/en-us/dotnet/maui/) – cross-platform UI framework (.NET 10)
@@ -53,6 +59,8 @@ Készült Claude segítségével.
 - Jelszóval védett PDF-ek megnyitásához `UnethicalReading` mód szükséges
 - Az oldal preview és renderelés csak Android platformon érhető el
 - Az oldalak sorrendje szabadon módosítható összefűzés előtt
+- JPEG/PNG képek automatikusan A4-re igazíthatók
+- EXIF forgatás automatikusan figyelembe van véve képeknél
 
 ## Licenc
 MIT License
