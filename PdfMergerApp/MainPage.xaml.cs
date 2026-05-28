@@ -268,7 +268,7 @@ namespace PdfMergerApp
 
                 mergeSuccess = true;
                 await DisplayAlert(
-                "OK",
+                "",
                 string.Format(LocalizationManager.Get("PdfCreated"), GlobalVariables.sumOfPages),
                 "OK");
             }

@@ -8,7 +8,6 @@
 
             // Betöltés
             FileNameEntry.Text = Preferences.Get("outputFileName", "output");
-            VibrateSwitch.IsToggled = Preferences.Get("vibrateOnDone", false);
             AutoOpenSwitch.IsToggled = Preferences.Get("autoOpenPdf", false);
             LargePreviewSwitch.IsToggled = Preferences.Get("largePreview", true);
             DarkModeSwitch.IsToggled = Preferences.Get("darkMode", false);
@@ -19,14 +18,12 @@
 
             // GlobalVariables szinkronizálása
             GlobalVariables.outputFileName = FileNameEntry.Text;
-            GlobalVariables.vibrateOnDone = VibrateSwitch.IsToggled;
             GlobalVariables.autoOpenPdf = AutoOpenSwitch.IsToggled;
             GlobalVariables.previewHeight = LargePreviewSwitch.IsToggled ? 400 : 160;
             GlobalVariables.previewSpan = LargePreviewSwitch.IsToggled ? 1 : 2;
             Application.Current.UserAppTheme = DarkModeSwitch.IsToggled ? AppTheme.Dark : AppTheme.Light;
 
             FileNameEntry.Text = GlobalVariables.outputFileName;
-            VibrateSwitch.IsToggled = GlobalVariables.vibrateOnDone;
             AutoOpenSwitch.IsToggled = GlobalVariables.autoOpenPdf;
             LargePreviewSwitch.IsToggled = GlobalVariables.previewHeight == 300;
             DarkModeSwitch.IsToggled = Application.Current.UserAppTheme == AppTheme.Dark;
@@ -120,8 +117,6 @@
             TitleLabel.Text = LocalizationManager.Get("Settings");
             OutputFileNameLabel.Text = LocalizationManager.Get("OutputFileName");
             SaveButton.Text = LocalizationManager.Get("Save");
-            VibrationLabel.Text = LocalizationManager.Get("Vibration");
-            VibrationDescLabel.Text = LocalizationManager.Get("VibrationDesc");
             AutoOpenLabel.Text = LocalizationManager.Get("AutoOpen");
             AutoOpenDescLabel.Text = LocalizationManager.Get("AutoOpenDesc");
             LargePreviewLabel.Text = LocalizationManager.Get("LargePreview");
