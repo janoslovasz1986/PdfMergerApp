@@ -34,6 +34,9 @@
             PasswordSwitch.IsToggled = Preferences.Get("passwordProtect", false);
             GlobalVariables.passwordProtect = PasswordSwitch.IsToggled;
 
+            ImageFitA4Switch.IsToggled = Preferences.Get("imageFitA4", false);
+            GlobalVariables.imageFitA4 = ImageFitA4Switch.IsToggled;
+
             ApplyLocalization();
         }
 
@@ -131,6 +134,8 @@
             PasswordDescLabel.Text = LocalizationManager.Get("PasswordProtectDesc");
             LanguageLabel.Text = LocalizationManager.Get("Language");
             ConfirmLabel.Text = "";
+            ImageSizeModeLabel.Text = LocalizationManager.Get("ImageSizeMode");
+            ImageSizeModeDescLabel.Text = LocalizationManager.Get("ImageSizeModeDesc");
 
         }
 
@@ -152,6 +157,12 @@
             // Tab nevek frissítése
             if (Shell.Current is AppShell appShell)
                 appShell.ApplyLocalization();
+        }
+
+        private void ImageFitA4Switch_Toggled(object sender, ToggledEventArgs e)
+        {
+            GlobalVariables.imageFitA4 = e.Value;
+            Preferences.Set("imageFitA4", e.Value);
         }
     }
 }

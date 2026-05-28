@@ -30,10 +30,10 @@
 		<!--<MauiXamlInflator>SourceGen</MauiXamlInflator>-->
 
 		<!-- Display name -->
-		<ApplicationTitle>Pdf Merger</ApplicationTitle>
+		<ApplicationTitle>Fuse PDF</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.lovijani.pdfmerger</ApplicationId>
+		<ApplicationId>com.lovijani.fusepdf</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>

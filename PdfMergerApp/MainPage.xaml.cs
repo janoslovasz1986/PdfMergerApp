@@ -162,33 +162,77 @@ namespace PdfMergerApp
                                     float imgWidth = imageData.GetWidth();
                                     float imgHeight = imageData.GetHeight();
 
+                                    int exifRotation = 0;
+#if ANDROID
+    exifRotation = GetExifRotation(filePath);
+#endif
+
+                                    int totalRotation = (exifRotation + pageItem.Rotation) % 360;
+
                                     PdfPage page;
                                     iText.Kernel.Pdf.Canvas.PdfCanvas pdfCanvas;
 
-                                    switch (pageItem.Rotation)
+                                    if (GlobalVariables.imageFitA4)
                                     {
-                                        case 90:
-                                            page = destPdf.AddNewPage(new iText.Kernel.Geom.PageSize(imgHeight, imgWidth));
-                                            pdfCanvas = new iText.Kernel.Pdf.Canvas.PdfCanvas(page);
-                                            pdfCanvas.ConcatMatrix(0, -1, 1, 0, 0, imgWidth);
-                                            break;
-                                        case 180:
-                                            page = destPdf.AddNewPage(new iText.Kernel.Geom.PageSize(imgWidth, imgHeight));
-                                            pdfCanvas = new iText.Kernel.Pdf.Canvas.PdfCanvas(page);
-                                            pdfCanvas.ConcatMatrix(-1, 0, 0, -1, imgWidth, imgHeight);
-                                            break;
-                                        case 270:
-                                            page = destPdf.AddNewPage(new iText.Kernel.Geom.PageSize(imgHeight, imgWidth));
-                                            pdfCanvas = new iText.Kernel.Pdf.Canvas.PdfCanvas(page);
-                                            pdfCanvas.ConcatMatrix(0, 1, -1, 0, imgHeight, 0);
-                                            break;
-                                        default: // 0 fok
-                                            page = destPdf.AddNewPage(new iText.Kernel.Geom.PageSize(imgWidth, imgHeight));
-                                            pdfCanvas = new iText.Kernel.Pdf.Canvas.PdfCanvas(page);
-                                            break;
+                                        float pageWidth = iText.Kernel.Geom.PageSize.A4.GetWidth();
+                                        float pageHeight = iText.Kernel.Geom.PageSize.A4.GetHeight();
+
+                                        // 90/270 foknál felcseréljük a méreteket
+                                        float effectiveWidth = (totalRotation == 90 || totalRotation == 270) ? imgHeight : imgWidth;
+                                        float effectiveHeight = (totalRotation == 90 || totalRotation == 270) ? imgWidth : imgHeight;
+
+                                        float scale = Math.Min(pageWidth / effectiveWidth, pageHeight / effectiveHeight);
+                                        float drawWidth = effectiveWidth * scale;
+                                        float drawHeight = effectiveHeight * scale;
+                                        float x = (pageWidth - drawWidth) / 2;
+                                        float y = (pageHeight - drawHeight) / 2;
+
+                                        page = destPdf.AddNewPage(iText.Kernel.Geom.PageSize.A4);
+                                        pdfCanvas = new iText.Kernel.Pdf.Canvas.PdfCanvas(page);
+
+                                        switch (totalRotation)
+                                        {
+                                            case 90:
+                                                pdfCanvas.ConcatMatrix(0, -1, 1, 0, x, y + drawHeight);
+                                                pdfCanvas.AddImageWithTransformationMatrix(imageData, drawHeight, 0, 0, drawWidth, 0, 0);
+                                                break;
+                                            case 180:
+                                                pdfCanvas.ConcatMatrix(-1, 0, 0, -1, x + drawWidth, y + drawHeight);
+                                                pdfCanvas.AddImageWithTransformationMatrix(imageData, drawWidth, 0, 0, drawHeight, 0, 0);
+                                                break;
+                                            case 270:
+                                                pdfCanvas.ConcatMatrix(0, 1, -1, 0, x + drawWidth, y);
+                                                pdfCanvas.AddImageWithTransformationMatrix(imageData, drawHeight, 0, 0, drawWidth, 0, 0);
+                                                break;
+                                            default:
+                                                pdfCanvas.AddImageWithTransformationMatrix(imageData, drawWidth, 0, 0, drawHeight, x, y);
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        bool isRotated = totalRotation == 90 || totalRotation == 270;
+                                        float pageW = isRotated ? imgHeight : imgWidth;
+                                        float pageH = isRotated ? imgWidth : imgHeight;
+
+                                        page = destPdf.AddNewPage(new iText.Kernel.Geom.PageSize(pageW, pageH));
+                                        pdfCanvas = new iText.Kernel.Pdf.Canvas.PdfCanvas(page);
+
+                                        switch (totalRotation)
+                                        {
+                                            case 90:
+                                                pdfCanvas.ConcatMatrix(0, -1, 1, 0, 0, imgWidth);
+                                                break;
+                                            case 180:
+                                                pdfCanvas.ConcatMatrix(-1, 0, 0, -1, imgWidth, imgHeight);
+                                                break;
+                                            case 270:
+                                                pdfCanvas.ConcatMatrix(0, 1, -1, 0, imgHeight, 0);
+                                                break;
+                                        }
+                                        pdfCanvas.AddImageAt(imageData, 0, 0, false);
                                     }
 
-                                    pdfCanvas.AddImageAt(imageData, 0, 0, false);
                                     GlobalVariables.sumOfPages++;
                                 }
                                 else
@@ -399,6 +443,24 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
     {
         GlobalVariables.pages.Add(pageItem);
     });
+}
+#endif
+
+#if ANDROID
+private int GetExifRotation(string filePath)
+{
+    var exif = new Android.Media.ExifInterface(filePath);
+    int orientation = exif.GetAttributeInt(
+        Android.Media.ExifInterface.TagOrientation,
+        (int)Android.Media.Orientation.Normal);
+
+    return orientation switch
+    {
+        (int)Android.Media.Orientation.Rotate90 => 90,
+        (int)Android.Media.Orientation.Rotate180 => 180,
+        (int)Android.Media.Orientation.Rotate270 => 270,
+        _ => 0
+    };
 }
 #endif
 
@@ -633,5 +695,6 @@ private async Task LoadImagePageAsync(string filePath, string fileName)
         public static string pdfPassword = "";
         public static string currentLanguage = "hu";
         public static int sumOfSuccesfullyMergedPdfs = 0;
+        public static bool imageFitA4 = false;
     }
 }

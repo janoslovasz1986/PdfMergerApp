@@ -33,5 +33,7 @@
     "TapToZoom": "Nagyításhoz bökj rá",
     "Error": "Hiba",
     "PasswordPlaceholder": "jelszó...",
-    "ErrorInvalidFileType": "Csak PDF, PNG vagy JPEG fájlt lehet kiválasztani!"
+    "ErrorInvalidFileType": "Csak PDF, PNG vagy JPEG fájlt lehet kiválasztani!",
+    "ImageSizeMode": "Kép A4-re igazítás",
+    "ImageSizeModeDesc": "Képek automatikus igazítása A4-es méretre"
 }

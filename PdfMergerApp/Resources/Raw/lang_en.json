@@ -32,5 +32,7 @@
   "SettingsTab": "Settings",
   "Error": "Error",
   "PasswordPlaceholder": "password...",
-  "ErrorInvalidFileType": "Only PDF, PNG or JPEG files are allowed!"
+  "ErrorInvalidFileType": "Only PDF, PNG or JPEG files are allowed!",
+  "ImageSizeMode": "Fit image to A4",
+  "ImageSizeModeDesc": "Automatically fit images to A4 size"
 }

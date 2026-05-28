@@ -33,5 +33,7 @@
   "TapToZoom": "Zum Zoomen tippen",
   "Error": "Fehler",
   "PasswordPlaceholder": "Passwort...",
-  "ErrorInvalidFileType": "Nur PDF, PNG oder JPEG Dateien sind erlaubt!"
+  "ErrorInvalidFileType": "Nur PDF, PNG oder JPEG Dateien sind erlaubt!",
+  "ImageSizeMode": "Bild an A4 anpassen",
+  "ImageSizeModeDesc": "Bilder automatisch an A4-Größe anpassen"
 }
