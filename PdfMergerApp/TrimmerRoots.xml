@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<linker>
+    <assembly fullname="itext" preserve="all"/>
+    <assembly fullname="itext.bouncy-castle-fips-adapter" preserve="all"/>
+    <assembly fullname="itext.commons" preserve="all"/>
+    <assembly fullname="itext.kernel" preserve="all"/>
+    <assembly fullname="itext.io" preserve="all"/>
+    <assembly fullname="itext.layout" preserve="all"/>
+    <assembly fullname="BouncyCastle.Cryptography" preserve="all"/>
+    <assembly fullname="Org.BouncyCastle.Crypto" preserve="all"/>
+    <assembly fullname="PdfMergerApp" preserve="all"/>
+</linker>

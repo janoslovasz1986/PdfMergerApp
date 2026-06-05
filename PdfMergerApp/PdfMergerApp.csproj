@@ -4,14 +4,6 @@
 		<TargetFrameworks>net10.0-android</TargetFrameworks>
 		<TargetFrameworks Condition="!$([MSBuild]::IsOSPlatform('linux'))">$(TargetFrameworks);net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
-
-		<!-- Note for MacCatalyst:
-		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
-		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
-		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
-		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
-		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
-
 		<OutputType>Exe</OutputType>
 		<RootNamespace>PdfMergerApp</RootNamespace>
 		<UseMaui>true</UseMaui>
@@ -49,6 +41,19 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<Platforms>AnyCPU;x64;arm64;ARM64</Platforms>
 	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<AndroidPackageFormat>apk</AndroidPackageFormat>
+		<AndroidUseAapt2>true</AndroidUseAapt2>
+		<AndroidAapt2LinkExtraArgs></AndroidAapt2LinkExtraArgs>
+	</PropertyGroup>
+	
+        <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+                       <PublishTrimmed>false</PublishTrimmed>
+                       <RunAOTCompilation>false</RunAOTCompilation>
+                       <AndroidPackageFormat>apk</AndroidPackageFormat>
+                       <AndroidUseAapt2>true</AndroidUseAapt2>
+        </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|AnyCPU'">
 	  <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
@@ -79,8 +84,8 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
 		<PackageReference Include="CommunityToolkit.Maui.Core" Version="13.0.0" />
-		<PackageReference Include="itext" Version="9.6.0" />
-		<PackageReference Include="itext.bouncy-castle-fips-adapter" Version="9.6.0" />
+                <PackageReference Include="itext7" Version="7.2.5" />
+                <PackageReference Include="itext7.bouncy-castle-adapter" Version="7.2.5" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Serilog" Version="3.1.1" />
 		<PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.0" />

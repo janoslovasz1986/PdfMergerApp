@@ -37,7 +37,6 @@ Készült Claude segítségével.
 - [iText7](https://itextpdf.com/products/itext-core) – PDF kezelés és összefűzés
 - [CommunityToolkit.Maui](https://github.com/CommunityToolkit/Maui) – MAUI kiegészítők
 - Android `PdfRenderer` – PDF oldalak valódi előnézete
-- Serilog – naplózás
 
 ## Telepítés
 1. Klónozd a repót:

@@ -27,7 +27,6 @@ namespace PdfMergerApp
         {
             _logger = logger;
             InitializeComponent();
-            //MyCollectionView.ItemsSource = GlobalVariables.inputPdf;
             PagesCollectionView.ItemsSource = GlobalVariables.pages;
 
             // SettingsPage előre betöltése
@@ -123,10 +122,32 @@ namespace PdfMergerApp
 
             try
             {
+                //WriteLog("Merge started");
+
                 await Task.Run(() =>
                 {
+                    //WriteLog("Task.Run started");
+                    _logger.LogInformation($"Output path: {outputPdfPath}");
+                    _logger.LogInformation($"Exists: {File.Exists(outputPdfPath)}");
+                    _logger.LogInformation($"Dir exists: {Directory.Exists(Path.GetDirectoryName(outputPdfPath))}");
+
+                    try
+                    {
+                        using var fs = File.Create(outputPdfPath);
+                        fs.WriteByte(1);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "File.Create");
+                        //DisplayAlert("", "error", "OK");
+                        throw;
+                    }
+
+                    _logger.LogInformation("File.Create OK");
+                    //DisplayAlert("", "File.Create OK", "OK");
 
                     PdfWriter writer;
+                    //WriteLog("Creating PdfWriter...");
                     if (GlobalVariables.passwordProtect && !string.IsNullOrEmpty(password))
                     {
                         var properties = new WriterProperties()
@@ -136,10 +157,12 @@ namespace PdfMergerApp
                                 EncryptionConstants.ALLOW_PRINTING,
                                 EncryptionConstants.ENCRYPTION_AES_128);
                         writer = new PdfWriter(outputPdfPath, properties);
+                        //WriteLog("PdfWriter created");
                     }
                     else
                     {
                         writer = new PdfWriter(outputPdfPath);
+                        //WriteLog("PdfWriter created");
                     }
 
 
@@ -164,7 +187,7 @@ namespace PdfMergerApp
 
                                     int exifRotation = 0;
 #if ANDROID
-    exifRotation = GetExifRotation(filePath);
+                                    exifRotation = GetExifRotation(filePath);
 #endif
 
                                     int totalRotation = (exifRotation + pageItem.Rotation) % 360;
@@ -275,6 +298,28 @@ namespace PdfMergerApp
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error merging PDFs");
+
+#if ANDROID
+                try
+                {
+                    /*
+                    string downloadsPath = Android.OS.Environment
+                        .GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)
+                        .AbsolutePath;
+                    string timeStamp = "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
+                    //string logPath = Path.Combine(downloadsPath, "fusepdf_error.txt");
+                    string logPath = Path.Combine(downloadsPath, "fusepdf_error" + timeStamp + ".txt");
+                    File.AppendAllText(logPath,
+                        $"{DateTime.Now}: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}\n\n");
+                    */
+                    WriteLog($"{ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+                }
+                catch (Exception logEx)
+                {
+                    await DisplayAlert("Log hiba", logEx.Message, "OK");
+                }
+#endif
+
                 await DisplayAlert("Hiba", ex.Message, "OK");
             }
             finally
@@ -299,7 +344,7 @@ namespace PdfMergerApp
                 {
                     await MoveFileFromAppDirectoryToDownloadAsync(FileSystem.AppDataDirectory,
                         GlobalVariables.outputFileNameCreatedOnDeviceInnerStorage);
-                   
+
                 }
                 catch (Exception ex)
                 {
@@ -319,7 +364,7 @@ namespace PdfMergerApp
                 }
             }
 
-            
+
             await DeleteTempFiles();
             await ClearGlobalVariables();
             await AutoQuit();
@@ -420,48 +465,48 @@ namespace PdfMergerApp
             GlobalVariables.inputPdf.Add(result.FileName.ToString());
 
 #if ANDROID
-    if (isPdf)
-        await LoadPdfPagesAsync(destPath);
-    else
-        await LoadImagePageAsync(destPath, result.FileName);
+            if (isPdf)
+                await LoadPdfPagesAsync(destPath);
+            else
+                await LoadImagePageAsync(destPath, result.FileName);
 #endif
             MainThread.BeginInvokeOnMainThread(() => UpdatePagesHeaderLabel());
         }
 
 
 #if ANDROID
-private async Task LoadImagePageAsync(string filePath, string fileName)
-{
-    var pageItem = new PdfPageItem
-    {
-        FileName = Path.GetFileName(filePath),
-        PageNumber = 1,
-        Preview = ImageSource.FromFile(filePath)
-    };
+        private async Task LoadImagePageAsync(string filePath, string fileName)
+        {
+            var pageItem = new PdfPageItem
+            {
+                FileName = Path.GetFileName(filePath),
+                PageNumber = 1,
+                Preview = ImageSource.FromFile(filePath)
+            };
 
-    MainThread.BeginInvokeOnMainThread(() =>
-    {
-        GlobalVariables.pages.Add(pageItem);
-    });
-}
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                GlobalVariables.pages.Add(pageItem);
+            });
+        }
 #endif
 
 #if ANDROID
-private int GetExifRotation(string filePath)
-{
-    var exif = new Android.Media.ExifInterface(filePath);
-    int orientation = exif.GetAttributeInt(
-        Android.Media.ExifInterface.TagOrientation,
-        (int)Android.Media.Orientation.Normal);
+        private int GetExifRotation(string filePath)
+        {
+            var exif = new Android.Media.ExifInterface(filePath);
+            int orientation = exif.GetAttributeInt(
+                Android.Media.ExifInterface.TagOrientation,
+                (int)Android.Media.Orientation.Normal);
 
-    return orientation switch
-    {
-        (int)Android.Media.Orientation.Rotate90 => 90,
-        (int)Android.Media.Orientation.Rotate180 => 180,
-        (int)Android.Media.Orientation.Rotate270 => 270,
-        _ => 0
-    };
-}
+            return orientation switch
+            {
+                (int)Android.Media.Orientation.Rotate90 => 90,
+                (int)Android.Media.Orientation.Rotate180 => 180,
+                (int)Android.Media.Orientation.Rotate270 => 270,
+                _ => 0
+            };
+        }
 #endif
 
         public async Task OpenCreatedPdf()
@@ -526,7 +571,7 @@ private int GetExifRotation(string filePath)
 
         private void QuitApp_Clicked(object sender, EventArgs e)
         {
-         
+
             Application.Current.Quit();
         }
 
@@ -552,7 +597,7 @@ private int GetExifRotation(string filePath)
                 {
                     using (var page = renderer.OpenPage(i))
                     {
-                        int width = 600; 
+                        int width = 600;
                         int height = (int)(width * page.Height / (float)page.Width);
 
                         var bitmap = Android.Graphics.Bitmap.CreateBitmap(
@@ -580,7 +625,7 @@ private int GetExifRotation(string filePath)
                         {
                             GlobalVariables.pages.Add(pageItem);
                         });
-                    } 
+                    }
                 }
             });
         }
@@ -601,8 +646,22 @@ private int GetExifRotation(string filePath)
 
             UpdatePagesHeaderLabel();
 
-            ApplyLocalization(); 
+            ApplyLocalization();
         }
+
+
+
+        private void ApplyLocalization()
+        {
+            BtnAddPdf.Text = LocalizationManager.Get("AddPdf");
+            BtnClear.Text = LocalizationManager.Get("Clear");
+            BtnCreatePdf.Text = LocalizationManager.Get("FusePdf");
+            BtnQuit.Text = LocalizationManager.Get("Quit");
+
+            UpdatePagesHeaderLabel();
+        }
+
+#endif
 
         private void RotateLeft_Clicked(object sender, TappedEventArgs e)
         {
@@ -616,17 +675,22 @@ private int GetExifRotation(string filePath)
             item.Rotation = (item.Rotation + 90) % 360;
         }
 
-        private void ApplyLocalization()
+
+        private void WriteLog(string message)
         {
-            BtnAddPdf.Text = LocalizationManager.Get("AddPdf");
-            BtnClear.Text = LocalizationManager.Get("Clear");
-            BtnCreatePdf.Text = LocalizationManager.Get("FusePdf");
-            BtnQuit.Text = LocalizationManager.Get("Quit");
-
-            UpdatePagesHeaderLabel(); 
-        }
-
+#if ANDROID
+            try
+            {
+                string downloadsPath = Android.OS.Environment
+                    .GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)
+                    .AbsolutePath;
+                string timeStamp = "+" + DateTime.Now.ToString("yyyyMMddHHmmss");
+                string logPath = Path.Combine(downloadsPath, "fusepdf_error" + timeStamp + ".txt");
+                File.AppendAllText(logPath, $"{DateTime.Now}: {message}\n");
+            }
+            catch { }
 #endif
+        }
 
         public async Task ClearGlobalVariables()
         {
@@ -647,6 +711,9 @@ private int GetExifRotation(string filePath)
             });
         }
     }
+
+
+    
 
     public class PdfPageItem : INotifyPropertyChanged
     {
@@ -673,6 +740,8 @@ private int GetExifRotation(string filePath)
         protected void OnPropertyChanged([CallerMemberName] string name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
+
+
 
     public static class GlobalVariables
     {
