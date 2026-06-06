@@ -159,5 +159,6 @@
             GlobalVariables.imageFitA4 = e.Value;
             Preferences.Set("imageFitA4", e.Value);
         }
+
     }
 }

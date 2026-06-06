@@ -4,6 +4,7 @@
        xmlns:local="clr-namespace:PdfMergerApp"
        x:Class="PdfMergerApp.AppShell">
 
+
     <TabBar>
         <Tab Title="Főoldal" Icon="pdf_icon.png">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}"/>

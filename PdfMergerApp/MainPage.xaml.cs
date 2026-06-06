@@ -439,37 +439,41 @@ namespace PdfMergerApp
         })
             };
 
-            var result = await FilePicker.Default.PickAsync(options);
-            if (result == null) return;
+            var results = await FilePicker.Default.PickMultipleAsync(options);
+            if (results == null || !results.Any()) return;
 
-            bool isPdf = result.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase);
-            bool isImage = result.FileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                           result.FileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                           result.FileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
-
-            if (!isPdf && !isImage)
+            foreach (var result in results)
             {
-                await DisplayAlert(
-                    LocalizationManager.Get("Error"),
-                    LocalizationManager.Get("ErrorInvalidFileType"),
-                    "OK");
-                return;
-            }
+                bool isPdf = result.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase);
+                bool isImage = result.FileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                               result.FileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                               result.FileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
 
-            var destPath = Path.Combine(FileSystem.AppDataDirectory, result.FileName);
-            using var sourceStream = await result.OpenReadAsync();
-            using var destStream = File.Create(destPath);
-            await sourceStream.CopyToAsync(destStream);
-            destStream.Close();
+                if (!isPdf && !isImage)
+                {
+                    await DisplayAlert(
+                        LocalizationManager.Get("Error"),
+                        LocalizationManager.Get("ErrorInvalidFileType"),
+                        "OK");
+                    continue;
+                }
 
-            GlobalVariables.inputPdf.Add(result.FileName.ToString());
+                var destPath = Path.Combine(FileSystem.AppDataDirectory, result.FileName);
+                using var sourceStream = await result.OpenReadAsync();
+                using var destStream = File.Create(destPath);
+                await sourceStream.CopyToAsync(destStream);
+                destStream.Close();
+
+                GlobalVariables.inputPdf.Add(result.FileName.ToString());
 
 #if ANDROID
-            if (isPdf)
-                await LoadPdfPagesAsync(destPath);
-            else
-                await LoadImagePageAsync(destPath, result.FileName);
+        if (isPdf)
+            await LoadPdfPagesAsync(destPath);
+        else
+            await LoadImagePageAsync(destPath, result.FileName);
 #endif
+            }
+
             MainThread.BeginInvokeOnMainThread(() => UpdatePagesHeaderLabel());
         }
 
@@ -517,8 +521,6 @@ namespace PdfMergerApp
             {
                 File = new ReadOnlyFile(filePath)
             });
-
-
         }
 
         private void StartLoadingAnimation()

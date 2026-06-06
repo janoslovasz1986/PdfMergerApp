@@ -20,10 +20,6 @@
                FontAttributes="Bold"
                HorizontalOptions="Center"/>
 
-        <Label Text="Betöltés..."
-               FontSize="14"
-               TextColor="Gray"
-               HorizontalOptions="Center"/>
 
     </VerticalStackLayout>
 

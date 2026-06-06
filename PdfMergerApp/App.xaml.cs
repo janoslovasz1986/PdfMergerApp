@@ -1,5 +1,6 @@
 ﻿using iText.Kernel.Pdf;
 using Microsoft.Extensions.DependencyInjection;
+using System.Globalization;
 
 namespace PdfMergerApp
 {
@@ -10,8 +11,20 @@ namespace PdfMergerApp
             InitializeComponent();
 
             string lang = Preferences.Get("language", "hu");
-            GlobalVariables.currentLanguage = lang;
+            if (string.IsNullOrEmpty(lang))
+            {
+                // Első indulás - telefon nyelvét követjük
+                string systemLang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+                lang = systemLang switch
+                {
+                    "hu" => "hu",
+                    "de" => "de",
+                    "es" => "es",
+                    _ => "en" // minden más -> angol
+                };
+            }
 
+            GlobalVariables.currentLanguage = lang;
             Task.Run(async () => await LocalizationManager.LoadLanguageAsync(lang)).Wait();
 
             bool darkMode = Preferences.Get("darkMode", false);
@@ -31,7 +44,7 @@ namespace PdfMergerApp
             });
 
         }
-
+        
 
         protected override Window CreateWindow(IActivationState? activationState)
         {

@@ -5,6 +5,7 @@
              x:Class="PdfMergerApp.MainPage">
     <Grid RowDefinitions="Auto,*,Auto,Auto">
 
+
         <!-- Háttérkép -->
         <Image Source="mergepdf_bg.png"
            Aspect="AspectFill"
