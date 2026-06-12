@@ -602,9 +602,16 @@ namespace PdfMergerApp
                         int width = 600;
                         int height = (int)(width * page.Height / (float)page.Width);
 
+                        
                         var bitmap = Android.Graphics.Bitmap.CreateBitmap(
                             width, height, Android.Graphics.Bitmap.Config.Argb8888);
+
                         bitmap.EraseColor(Android.Graphics.Color.White);
+
+                        // Canvas-szal garantáljuk a fehér hátteret
+                        //var canvas = new Android.Graphics.Canvas(bitmap);
+                        //canvas.DrawColor(Android.Graphics.Color.White);
+
                         page.Render(bitmap, null, null,
                             Android.Graphics.Pdf.PdfRenderMode.ForDisplay);
 
