@@ -2,6 +2,10 @@
 Egy Android alkalmazás PDF fájlok összefűzéséhez, .NET MAUI platformon.
 Készült Claude segítségével.
 
+## Google Play áruház link
+Az applikáció letölthető play áruházból a következő linken:
+  https://play.google.com/store/apps/details?id=com.lovij4ni.fusepdf
+
 ## Funkciók
 - 📂 Több PDF és kép (PNG, JPEG) fájl kiválasztása a telefonról
 - 👁️ PDF oldalak valódi előnézete (page preview)
@@ -74,6 +78,3 @@ Készült Claude segítségével.
 ## Licenc
 MIT License
 
-## Google Play áruház link
-- Az applikáció letölthető play áruházból a következő linken:
-  https://play.google.com/store/apps/details?id=com.lovij4ni.fusepdf
