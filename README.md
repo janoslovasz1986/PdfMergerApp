@@ -31,6 +31,8 @@ Készült Claude segítségével.
 | PDF összefűző | Beállítások |
 |---|---|
 | Oldal preview + műveleti gombok | Fájlnév, rezgés, auto megnyitás, preview méret, téma, nyelv |
+|---|---|
+|Összefüzés| https://github-production-user-asset-6210df.s3.amazonaws.com/85942651/617483824-d0808db9-bdac-4072-890f-a1f09d62bc0b.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20260706%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260706T094745Z&X-Amz-Expires=300&X-Amz-Signature=70633529744b3a724b80a1395d9cf6dc4930df54035649aceac5a7a24c25fce1&X-Amz-SignedHeaders=host&response-content-type=image%2Fjpeg|
 
 ## Technológiák
 - [.NET MAUI](https://learn.microsoft.com/en-us/dotnet/maui/) – cross-platform UI framework (.NET 10)
