@@ -37,9 +37,9 @@ Készült Claude segítségével.
 |---|---|
 | <img src="https://github.com/user-attachments/assets/783255b6-abb2-490c-a735-27a88f17d017" width="250"/> | <img src="https://github.com/user-attachments/assets/d0808db9-bdac-4072-890f-a1f09d62bc0b" width="250"/> |
 
-|Jelszó hozzáadása a kész PDF-hez|
+|Jelszó hozzáadása a kész PDF-hez||
 |---|---|
-<img src="https://github.com/user-attachments/assets/046ff7c4-ea90-4952-8821-1f5e4d834260" width="250"/>
+<img src="https://github.com/user-attachments/assets/046ff7c4-ea90-4952-8821-1f5e4d834260" width="250"/> |
 
 
 ## Technológiák
