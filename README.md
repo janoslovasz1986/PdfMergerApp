@@ -63,3 +63,7 @@ Készült Claude segítségével.
 
 ## Licenc
 MIT License
+
+## Google Play áruház link
+- Az applikáció letölthető play áruházból a következő linken:
+  https://play.google.com/store/apps/details?id=com.lovij4ni.fusepdf

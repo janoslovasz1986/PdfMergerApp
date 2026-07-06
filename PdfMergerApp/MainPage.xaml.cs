@@ -666,6 +666,7 @@ namespace PdfMergerApp
             BtnClear.Text = LocalizationManager.Get("Clear");
             BtnCreatePdf.Text = LocalizationManager.Get("FusePdf");
             BtnQuit.Text = LocalizationManager.Get("Quit");
+            LoadingLabel.Text = LocalizationManager.Get("MergingInProgress");
 
             UpdatePagesHeaderLabel();
         }
